@@ -112,8 +112,8 @@ function databaseInserts() {
       experiencia: 'Ótima sala, muito confortável!',
       avaliacao: true,
       quantidadePessoas: 5,
-      id_cliente: 1,
-      id_reserva_sala: reserva1.id,
+      clienteId: 1,
+      reservaId: reserva1.id,
       dtCarga: new Date()
     });
 
@@ -121,8 +121,8 @@ function databaseInserts() {
       experiencia: 'A sala poderia ser mais silenciosa.',
       avaliacao: false,
       quantidadePessoas: 3,
-      id_cliente: 2,
-      id_reserva_sala: reserva2.id,
+      clienteId: 2,
+      reservaId: reserva2.id,
       dtCarga: new Date()
     });
   })();
