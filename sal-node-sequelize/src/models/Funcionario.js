@@ -58,8 +58,8 @@ export default class Funcionario extends Model {
   }
 
   static associate(models) {
-    this.hasMany(models.ReservaDeSala, { as: 'reservas', foreignKey: 'id_funcionario', onDelete: 'CASCADE' });
-    this.hasMany(models.AluguelDeLivro, { as: 'alugueis', foreignKey: 'id_funcionario', onDelete: 'CASCADE' });
+    this.hasMany(models.ReservaDeSala, { as: 'reserva', foreignKey: 'reservaDeSalaId', onDelete: 'CASCADE' });
+    this.hasMany(models.AluguelDeLivro, { as: 'aluguel', foreignKey: 'aluguelDeLivroId', onDelete: 'CASCADE' });
 }
 
 }
