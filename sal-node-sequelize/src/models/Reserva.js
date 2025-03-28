@@ -1,40 +1,43 @@
+// // Sofia: Processo de Reserva de Sala
 import { Model, DataTypes } from 'sequelize';
 
-export default class Autor extends Model {
+export default class Livro extends Model {
   static init(sequelize) {
     super.init({
-      nome: {
-        type: DataTypes.STRING,
-        validate: {
-          notEmpty: { msg: 'O nome deve ser preenchido!' },
-          len: { args: [3, 50], msg: 'O nome deve ter entre 3 e 50 caracteres!' },
-        }
-      },
-      nascimento: {
+      dtReserva: {
         type: DataTypes.DATE,
         validate: {
-          notEmpty: { msg: 'A data de nascimento deve ser preenchida!' },
+          notEmpty: { msg: 'O data da reserva deve ser selecionada!' },
+        }
+      },
+      dtInicio: {
+        type: DataTypes.DATETIME,
+        validate: {
+          notEmpty: { msg: 'A data de início deve ser selecionada!' },
+        }
+      },
+      dtTermino: {
+        type: DataTypes.DATETIME,
+        validate: {
+          notEmpty: { msg: 'A data de término deve ser selecionada!' },
         }
       },
       dtCarga: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
-      nacionalidade: {
-        type: DataTypes.STRING,
-        validate: {
-          notEmpty: { msg: 'A nacionalidade deve ser preenchida!' },
-          len: { args: [5, 30], msg: 'A nacionalidade deve ter entre 3 e 30 caracteres!' },
-        }
-      }
-    }, {
-      sequelize, modelName: 'autor', tableName: 'autores'
+    }, 
+    {
+      sequelize, modelName: 'reserva', tableName: 'reservas'
     })
   }
 
   static associate(models) {
-    this.hasMany(models.livro, { as: 'livros', foreignKey: 'id_autor', allowNull: false, onDelete: 'CASCADE' });
-  }
+    this.belongsTo(models.cliente, { as: 'cliente', foreignKey: 'clienteId', onDelete: 'CASCADE' });
+    this.belongsTo(models.funcionario, { as: 'funcionario', foreignKey: 'funcionarioId', onDelete: 'CASCADE' });
+    this.belongsTo(models.sala, { as: 'sala', foreignKey: 'salaId', onDelete: 'CASCADE' });
+    this.hasOne(models.feedback, { as: 'feedback', foreignKey: 'feedbackId', onDelete: 'CASCADE' });
+}
 }
 
-export { Autor }
+export { Livro }

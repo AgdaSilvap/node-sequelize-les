@@ -1,40 +1,67 @@
+// Sofia: Cadastro de Livro
 import { Model, DataTypes } from 'sequelize';
 
-export default class Autor extends Model {
+export default class Livro extends Model {
   static init(sequelize) {
     super.init({
-      nome: {
+      dsTitulo: {
         type: DataTypes.STRING,
         validate: {
-          notEmpty: { msg: 'O nome deve ser preenchido!' },
-          len: { args: [3, 50], msg: 'O nome deve ter entre 3 e 50 caracteres!' },
+          notEmpty: { msg: 'O título do livro deve ser preenchido!' },
+          len: { args: [3, 50], msg: 'O título deve ter entre 3 e 50 caracteres!' },
         }
       },
-      nascimento: {
+      dtPublicacao: {
         type: DataTypes.DATE,
         validate: {
-          notEmpty: { msg: 'A data de nascimento deve ser preenchida!' },
+          notEmpty: { msg: 'A data de publicação deve ser preenchida!' },
+        }
+      },
+      isbn: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: { msg: 'O ISBN deve ser preenchido!' },
+        }
+      },
+      dsGenero: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: { msg: 'O gênero deve ser selecionado!' },
+        }
+      },
+      nrPaginas: {
+        type: DataTypes.INTEGER,
+        validate: {
+          notEmpty: { msg: 'O número de páginas deve ser preenchido!' },
+        }
+      },
+      dsGenero: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: { msg: 'O gênero deve ser selecionado!' },
+        }
+      },
+      dsTipo: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: { msg: 'O tipo do livro deve ser selecionado!' },
         }
       },
       dtCarga: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
-      nacionalidade: {
-        type: DataTypes.STRING,
-        validate: {
-          notEmpty: { msg: 'A nacionalidade deve ser preenchida!' },
-          len: { args: [5, 30], msg: 'A nacionalidade deve ter entre 3 e 30 caracteres!' },
-        }
-      }
+
     }, {
-      sequelize, modelName: 'autor', tableName: 'autores'
+      sequelize, modelName: 'livro', tableName: 'livros'
     })
   }
 
   static associate(models) {
-    this.hasMany(models.livro, { as: 'livros', foreignKey: 'id_autor', allowNull: false, onDelete: 'CASCADE' });
-  }
+    this.belongsTo(models.editora, { as: 'editora', foreignKey: 'editoraId', onDelete: 'CASCADE' });
+    this.belongsTo(models.autor, { as: 'autor', foreignKey: 'autorId', onDelete: 'CASCADE' });
+    this.hasMany(models.aluguel, { as: 'aluguel', foreignKey: 'aluguelId', onDelete: 'CASCADE' });
+}
 }
 
-export { Autor }
+export { Livro }
