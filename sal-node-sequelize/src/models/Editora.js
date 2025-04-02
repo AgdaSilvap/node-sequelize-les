@@ -56,7 +56,7 @@ class Editora extends Model {
   }
 
   static associate(models) {
-    this.hasMany(models.livro, { as: 'livros', foreignKey: 'id_livro', allowNull: false, onDelete: 'CASCADE' });
+    this.hasMany(models.livro, { as: 'livros', foreignKey: 'livroId', allowNull: false, onDelete: 'CASCADE' });
   }
 }
 
