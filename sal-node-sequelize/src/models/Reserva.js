@@ -1,7 +1,7 @@
 // // Sofia: Processo de Reserva de Sala
 import { Model, DataTypes } from 'sequelize';
 
-export default class Livro extends Model {
+export default class Reserva extends Model {
   static init(sequelize) {
     super.init({
       dtReserva: {
@@ -26,10 +26,10 @@ export default class Livro extends Model {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
-    }, 
-    {
-      sequelize, modelName: 'reserva', tableName: 'reservas'
-    })
+    },
+      {
+        sequelize, modelName: 'reserva', tableName: 'reservas'
+      })
   }
 
   static associate(models) {
@@ -37,7 +37,7 @@ export default class Livro extends Model {
     this.belongsTo(models.funcionario, { as: 'funcionario', foreignKey: 'funcionarioId', onDelete: 'CASCADE' });
     this.belongsTo(models.sala, { as: 'sala', foreignKey: 'salaId', onDelete: 'CASCADE' });
     this.hasOne(models.feedback, { as: 'feedback', foreignKey: 'feedbackId', onDelete: 'CASCADE' });
-}
+  }
 }
 
-export { Livro }
+export { Reserva }
