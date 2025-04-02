@@ -10,11 +10,11 @@ export default class Cliente extends Model {
           len: { args: [3, 50], msg: 'O nome deve ter entre 3 e 50 caracteres!' },
         }
       },
-      dsCpf: { 
-        type: DataTypes.STRING, 
+      dsCpf: {
+        type: DataTypes.STRING,
         validate: {
           notEmpty: { msg: "CPF do Cliente deve ser preenchido!" },
-          is: {args: ["[0-9]{3}\.[0-9]{3}\.[0-9]{3}\-[0-9]{2}"], msg: "CPF do Cliente deve seguir o padrão NNN.NNN.NNN-NN!" },
+          is: { args: ["[0-9]{3}\.[0-9]{3}\.[0-9]{3}\-[0-9]{2}"], msg: "CPF do Cliente deve seguir o padrão NNN.NNN.NNN-NN!" },
         }
       },
       dtNascimento: {
@@ -23,8 +23,8 @@ export default class Cliente extends Model {
           notEmpty: { msg: 'A data de nascimento deve ser preenchida!' },
         }
       },
-      dsGenero: { 
-        type: DataTypes.STRING, 
+      dsGenero: {
+        type: DataTypes.STRING,
         validate: {
           notEmpty: { msg: "O gênero deve ser selecionado!" },
         }
@@ -52,9 +52,9 @@ export default class Cliente extends Model {
   }
 
   static associate(models) {
-    this.hasMany(models.ReservaDeSala, { as: 'reservas', foreignKey: 'reservaDeSalaId', onDelete: 'CASCADE' });
-    this.hasMany(models.AluguelDeLivro, { as: 'alugueis', foreignKey: 'aluguelDeLivroId', onDelete: 'CASCADE' });
-}
+    this.hasMany(models.reserva, { as: 'reservas', foreignKey: 'reservaDeSalaId', onDelete: 'CASCADE' });
+    this.hasMany(models.aluguelDeLivro, { as: 'alugueis', foreignKey: 'aluguelDeLivroId', onDelete: 'CASCADE' });
+  }
 
 }
 
