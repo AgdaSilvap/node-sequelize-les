@@ -7,6 +7,9 @@ import { Feedback } from '../models/Feedback.js';
 import { Cliente } from '../models/Cliente.js';
 import { Funcionario } from '../models/Funcionario.js';
 import { AluguelDeLivro } from '../models/AluguelDeLivro.js';
+import { Livro } from '../models/Livro.js';
+import { Sala } from '../models/Sala.js';
+import { Reserva } from '../models/Reserva.js';
 
 const sequelize = new Sequelize(databaseConfig);
 
@@ -16,6 +19,9 @@ Feedback.init(sequelize);
 Cliente.init(sequelize);
 Funcionario.init(sequelize);
 AluguelDeLivro.init(sequelize);
+Livro.init(sequelize);
+Sala.init(sequelize);
+Reserva.init(sequelize);
 
 Autor.associate(sequelize.models);
 Editora.associate(sequelize.models);
@@ -23,6 +29,9 @@ Feedback.associate(sequelize.models);
 Cliente.associate(sequelize.models);
 Funcionario.associate(sequelize.models);
 AluguelDeLivro.associate(sequelize.models);
+Livro.associate(sequelize.models);
+Sala.associate(sequelize.models);
+Reserva.associate(sequelize.models);
 
 databaseInserts();
 
@@ -239,6 +248,62 @@ function databaseInserts() {
       FuncionarioId: funcionario4.id
     });
 
+    //aluna: SOFIA
+
+    //inserindo livros
+    const livro1 = await Livro.create({
+      dsTitulo: 'Harry Potter e a Pedra Filosofal',
+      dtPublicacao: '1997-06-26',
+      isbn: '978-3-16-148410-0',
+      dsGenero: 'Fantasia',
+      nrPaginas: 223,
+      dsTipo: 'Impresso',
+      editoraId: editora1.id,
+      autorId: autor1.id
+    });
+
+    const livro2 = await Livro.create({
+      dsTitulo: 'O Senhor dos Anéis',
+      dtPublicacao: '1954-07-29',
+      isbn: '978-0-261-10236-2',
+      dsGenero: 'Fantasia',
+      nrPaginas: 1178,
+      dsTipo: 'Impresso',
+      editoraId: editora2.id,
+      autorId: autor2.id
+    });
+
+    //inserindo salas
+    const sala1 = await Sala.create({
+      qtCapacidade: 10,
+      dsApelido: 'Sala de Leitura 1',
+      refrigerado: true
+    });
+
+    const sala2 = await Sala.create({
+      qtCapacidade: 15,
+      dsApelido: 'Sala de Leitura 2',
+      refrigerado: false
+    });
+
+    //inserindo reservas
+    const reserva1 = await Reserva.create({
+      dtReserva: new Date(),
+      dtInicio: new Date(),
+      dtTermino: new Date(new Date().getTime() + 60 * 60 * 1000),
+      clienteId: 1,
+      funcionarioId: 1,
+      salaId: sala1.id
+    });
+
+    const reserva2 = await Reserva.create({
+      dtReserva: new Date(),
+      dtInicio: new Date(),
+      dtTermino: new Date(new Date().getTime() + 120 * 60 * 1000),
+      clienteId: 2,
+      funcionarioId: 2,
+      salaId: sala2.id
+    });
 
   })()
 }
