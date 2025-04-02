@@ -11,13 +11,13 @@ export default class Reserva extends Model {
         }
       },
       dtInicio: {
-        type: DataTypes.DATETIME,
+        type: DataTypes.DATE,
         validate: {
           notEmpty: { msg: 'A data de início deve ser selecionada!' },
         }
       },
       dtTermino: {
-        type: DataTypes.DATETIME,
+        type: DataTypes.DATE,
         validate: {
           notEmpty: { msg: 'A data de término deve ser selecionada!' },
         }
