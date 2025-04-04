@@ -33,7 +33,6 @@ export default class Autor extends Model {
   }
 
   static associate(models) {
-    this.hasMany(models.livro, { as: 'livros', foreignKey: 'id_autor', allowNull: false, onDelete: 'CASCADE' });
   }
 }
 

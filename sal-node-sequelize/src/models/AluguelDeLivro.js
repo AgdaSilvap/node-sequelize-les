@@ -38,8 +38,8 @@ export default class AluguelDeLivro extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.cliente, { as: 'cliente', foreignKey: 'id_cliente', onDelete: 'CASCADE' });
-    this.belongsTo(models.livro, { as: 'livro', foreignKey: 'id_livro', onDelete: 'CASCADE' });
+    this.belongsTo(models.cliente, { as: 'cliente', foreignKey: 'clienteId', onDelete: 'CASCADE' });
+    this.hasMany(models.livro, { as: 'livro', foreignKey: 'livroId', onDelete: 'CASCADE' });
   }
 }
 

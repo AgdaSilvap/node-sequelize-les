@@ -54,10 +54,9 @@ class Editora extends Model {
       sequelize, modelName: 'editora', tableName: 'editoras'
     })
   }
-
   static associate(models) {
-    this.hasMany(models.livro, { as: 'livros', foreignKey: 'id_livro', allowNull: false, onDelete: 'CASCADE' });
   }
+
 }
 
 export { Editora }

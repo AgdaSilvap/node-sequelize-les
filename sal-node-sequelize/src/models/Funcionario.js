@@ -56,10 +56,7 @@ export default class Funcionario extends Model {
       sequelize, modelName: 'funcionario', tableName: 'funcionarios'
     })
   }
-
   static associate(models) {
-    this.hasMany(models.reserva, { as: 'reserva', foreignKey: 'reservaDeSalaId', onDelete: 'CASCADE' });
-    this.hasMany(models.aluguelDeLivro, { as: 'aluguel', foreignKey: 'aluguelDeLivroId', onDelete: 'CASCADE' });
   }
 
 }

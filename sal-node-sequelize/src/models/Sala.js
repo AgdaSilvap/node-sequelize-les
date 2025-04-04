@@ -31,10 +31,8 @@ export default class Sala extends Model {
       sequelize, modelName: 'sala', tableName: 'salas'
     })
   }
-
   static associate(models) {
-    this.hasMany(models.reserva, { as: 'reserva', foreignKey: 'reservaId', allowNull: false, onDelete: 'CASCADE' });
-}
+  }
 }
 
 export { Sala }

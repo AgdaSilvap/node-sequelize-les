@@ -60,7 +60,6 @@ export default class Livro extends Model {
   static associate(models) {
     this.belongsTo(models.editora, { as: 'editora', foreignKey: 'editoraId', onDelete: 'CASCADE' });
     this.belongsTo(models.autor, { as: 'autor', foreignKey: 'autorId', onDelete: 'CASCADE' });
-    this.hasMany(models.aluguelDeLivro, { as: 'aluguel', foreignKey: 'aluguelId', onDelete: 'CASCADE' });
   }
 }
 
