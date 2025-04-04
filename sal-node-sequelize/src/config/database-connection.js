@@ -173,9 +173,9 @@ function databaseInserts() {
       "endereco": "Rua dos Editores, 500",
       "telefone": "(11) 4444-4444"
     });
-    //aluna: SOFIA
 
-    //inserindo livros
+    //aluna: SOFIA
+    //inserindo 4 livros
     const livro1 = await Livro.create({
       dsTitulo: 'Harry Potter e a Pedra Filosofal',
       dtPublicacao: '1997-06-26',
@@ -198,7 +198,26 @@ function databaseInserts() {
       autorId: autor2.id
     });
 
-    //inserindo salas
+    const livro3 = await Livro.create({
+      dsTitulo: 'Dom Quixote',
+      dtPublicacao: '1605-01-16',
+      isbn: '978-0060934347',
+      dsGenero: 'Clássico',
+      nrPaginas: 1023,
+      dsTipo: 'Digital'
+    });
+
+    const livro4 = await Livro.create({
+      dsTitulo: '1984',
+      dtPublicacao: '1949-06-08',
+      isbn: '978-0451524935',
+      dsGenero: 'Distopia',
+      nrPaginas: 328,
+      dsTipo: 'Físico'
+    });
+
+
+    //inserindo 4 salas - SOFIA
     const sala1 = await Sala.create({
       qtCapacidade: 10,
       dsApelido: 'Sala de Leitura 1',
@@ -211,7 +230,19 @@ function databaseInserts() {
       refrigerado: false
     });
 
-    //inserindo reservas
+    const sala3 = await Sala.create({
+      qtCapacidade: 30,
+      dsApelido: 'Sala C',
+      refrigerado: true
+    });
+
+    const sala4 = await Sala.create({
+      qtCapacidade: 40,
+      dsApelido: 'Sala D',
+      refrigerado: false
+    });
+
+    //inserindo 4 reservas - SOFIA
     const reserva1 = await Reserva.create({
       dtReserva: new Date(),
       dtInicio: new Date(),
@@ -229,6 +260,21 @@ function databaseInserts() {
       funcionarioId: 2,
       salaId: sala2.id
     });
+
+    const reserva3 = await Reserva.create({
+      dtReserva: new Date(),
+      dtInicio: new Date(),
+      dtTermino: new Date(),
+      salaId: sala3.id
+    });
+
+    const reserva4 = await Reserva.create({
+      dtReserva: new Date(),
+      dtInicio: new Date(),
+      dtTermino: new Date(),
+      salaId: sala4.id
+    });
+
 
     //inserindo 4 feedbacks - AGDA
     const feedback1 = await Feedback.create({
