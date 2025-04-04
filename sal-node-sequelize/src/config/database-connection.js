@@ -204,7 +204,9 @@ function databaseInserts() {
       isbn: '978-0060934347',
       dsGenero: 'Clássico',
       nrPaginas: 1023,
-      dsTipo: 'Digital'
+      dsTipo: 'Digital',
+      editoraId: editora2.id,
+      autorId: autor2.id
     });
 
     const livro4 = await Livro.create({
@@ -213,7 +215,9 @@ function databaseInserts() {
       isbn: '978-0451524935',
       dsGenero: 'Distopia',
       nrPaginas: 328,
-      dsTipo: 'Físico'
+      dsTipo: 'Físico',
+      editoraId: editora2.id,
+      autorId: autor2.id
     });
 
 
@@ -264,14 +268,14 @@ function databaseInserts() {
     const reserva3 = await Reserva.create({
       dtReserva: new Date(),
       dtInicio: new Date(),
-      dtTermino: new Date(),
+      dtTermino: new Date(new Date().getTime() + 60 * 60 * 1000),
       salaId: sala3.id
     });
 
     const reserva4 = await Reserva.create({
       dtReserva: new Date(),
       dtInicio: new Date(),
-      dtTermino: new Date(),
+      dtTermino: new Date(new Date().getTime() + 60 * 60 * 1000),
       salaId: sala4.id
     });
 
