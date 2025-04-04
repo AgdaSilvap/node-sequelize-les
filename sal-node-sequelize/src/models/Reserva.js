@@ -36,7 +36,6 @@ export default class Reserva extends Model {
     this.belongsTo(models.cliente, { as: 'cliente', foreignKey: 'clienteId', onDelete: 'CASCADE' });
     this.belongsTo(models.funcionario, { as: 'funcionario', foreignKey: 'funcionarioId', onDelete: 'CASCADE' });
     this.belongsTo(models.sala, { as: 'sala', foreignKey: 'salaId', onDelete: 'CASCADE' });
-    this.hasOne(models.feedback, { as: 'feedback', foreignKey: 'feedbackId', onDelete: 'CASCADE' });
   }
 }
 

@@ -50,10 +50,7 @@ export default class Cliente extends Model {
       sequelize, modelName: 'cliente', tableName: 'clientes'
     })
   }
-
   static associate(models) {
-    this.hasMany(models.reserva, { as: 'reservas', foreignKey: 'reservaDeSalaId', onDelete: 'CASCADE' });
-    this.hasMany(models.aluguelDeLivro, { as: 'alugueis', foreignKey: 'aluguelDeLivroId', onDelete: 'CASCADE' });
   }
 
 }

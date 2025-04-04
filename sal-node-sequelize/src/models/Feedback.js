@@ -45,8 +45,7 @@ class Feedback extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.cliente, { as: 'cliente', foreignKey: 'clienteId', allowNull: false, validate: { notNull: { msg: 'Cliente do Empréstimo deve ser preenchido!' } } });
-    this.hasMany(models.reserva, { as: 'reserva', foreignKey: 'reservaId', allowNull: false, validate: { notNull: { msg: 'A  reserva deve ser informada!' } }, onDelete: 'CASCADE' });
+    this.belongsTo(models.reserva, { as: 'reserva', foreignKey: 'reservaId', allowNull: false, validate: { notNull: { msg: 'A  reserva deve ser informada!' } }, onDelete: 'CASCADE' });
   }
 }
 
