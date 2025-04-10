@@ -13,6 +13,8 @@ class AutorService {
     return autor;
   }
 
+  //findByLivro?? 
+
   static async create(req) {
     const { nome, nascimento, nacionalidade } = req.body;
     if (nome == null) throw 'O nome deve ser preenchido!';
