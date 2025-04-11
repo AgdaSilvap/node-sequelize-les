@@ -353,7 +353,7 @@ function databaseInserts() {
       dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
       clienteId: cliente4.id,
-      FuncionarioId: funcionario4.id
+      funcionarioId: funcionario4.id
     });
 
 
