@@ -37,7 +37,19 @@ class LivroService {
     return await Livro.findByPk(obj.id, { include: { all: true, nested: true } });
   }
 
-  static async delete(req) {}
+  static async delete(req) {
+    const { id } = req.params;
+    const obj = await Livro.findByPk(id);
+    if (obj == null)
+      throw 'Livro não encontrado!';
+    try {
+      await obj.destroy();
+      return obj;
+    } catch (error) {
+      throw "Não é possível remover o livro.";
+    }
+  }
+  
 }
 
 export { LivroService };
