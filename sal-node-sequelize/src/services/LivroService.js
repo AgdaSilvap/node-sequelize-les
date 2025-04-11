@@ -18,9 +18,10 @@ class LivroService {
   }
 
   static async create(req) {
-    const { dsTitulo, dtPublicacao, isbn, dsGenero, nrPaginas, dsTipo, dtCarga } = req.body;
-    if (cidade == null) throw 'A Cidade do Bairro deve ser preenchida!';
-    const obj = await Bairro.create({ nome, cidadeId: cidade.id });
+    const { dsTitulo, dtPublicacao, isbn, dsGenero, nrPaginas, dsTipo, dtCarga, autor, editora } = req.body; //autor e editora são associações com outras tabelas
+    if (editora == null) throw 'A editora do livro deve ser preenchido!'; //autor e editora são foreign keys
+    if (autor == null) throw 'O autor do livro deve ser preenchido!';
+    const obj = await Bairro.create({ dsTitulo, dtPublicacao, isbn, dsGenero, nrPaginas, dsTipo, dtCarga, autorId: autor.id, editoraId: editora.id }); //como autor e editora são foreign keys, a referência fica da forma que coloquei
     return await Bairro.findByPk(obj.id, { include: { all: true, nested: true } });
   }
 
