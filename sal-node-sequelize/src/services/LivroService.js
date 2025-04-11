@@ -25,7 +25,17 @@ class LivroService {
     return await Bairro.findByPk(obj.id, { include: { all: true, nested: true } });
   }
 
-  static async update(req) {}
+  static async update(req) {
+    const { id } = req.params;
+    const { dsTitulo, dtPublicacao, isbn, dsGenero, nrPaginas, dsTipo, dtCarga, autor, editora } = req.body;
+    if (editora == null) throw 'A editora deve ser preenchida!';
+    if (autor == null) throw 'O autor do livro deve ser preenchido!';
+    const obj = await Livro.findByPk(id, { include: { all: true, nested: true } });
+    if (obj == null) throw 'Livro não encontrado!';
+    Object.assign(obj, { dsTitulo, dtPublicacao, isbn, dsGenero, nrPaginas, dsTipo, dtCarga, autorId: autor.id, editoraId: editora.id });
+    await obj.save();
+    return await Livro.findByPk(obj.id, { include: { all: true, nested: true } });
+  }
 
   static async delete(req) {}
 }
