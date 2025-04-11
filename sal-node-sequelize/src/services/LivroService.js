@@ -18,7 +18,7 @@ class LivroService {
   }
 
   static async create(req) {
-    const { nome, cidade } = req.body;
+    const { dsTitulo, dtPublicacao, isbn, dsGenero, nrPaginas, dsTipo, dtCarga } = req.body;
     if (cidade == null) throw 'A Cidade do Bairro deve ser preenchida!';
     const obj = await Bairro.create({ nome, cidadeId: cidade.id });
     return await Bairro.findByPk(obj.id, { include: { all: true, nested: true } });
