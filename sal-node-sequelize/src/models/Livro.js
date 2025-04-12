@@ -35,6 +35,12 @@ export default class Livro extends Model {
           notEmpty: { msg: 'O número de páginas deve ser preenchido!' },
         }
       },
+      dsGenero: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: { msg: 'O gênero deve ser selecionado!' },
+        }
+      },
       dsTipo: {
         type: DataTypes.STRING,
         validate: {
@@ -45,6 +51,7 @@ export default class Livro extends Model {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
+
     }, {
       sequelize, modelName: 'livro', tableName: 'livros'
     })
