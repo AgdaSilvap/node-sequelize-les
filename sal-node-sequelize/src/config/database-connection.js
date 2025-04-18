@@ -325,8 +325,8 @@ function databaseInserts() {
       dtDevolucao: new Date('2025-03-15'),
       dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
-      clienteId: cliente1.id,
-      funcionarioId: funcionario1.id
+      clienteId: 1,
+      funcionarioId: 1
     });
 
     const aluguel2 = await AluguelDeLivro.create({
@@ -334,8 +334,8 @@ function databaseInserts() {
       dtDevolucao: new Date('2025-03-20'),
       dsTipoAluguel: 'Quinzenal',
       vlTotal: 30.0,
-      clienteId: cliente2.id,
-      funcionarioId: funcionario2.id
+      clienteId: 2,
+      funcionarioId: 2
     });
 
     const aluguel3 = await AluguelDeLivro.create({
@@ -343,17 +343,17 @@ function databaseInserts() {
       dtDevolucao: new Date('2025-03-25'),
       dsTipoAluguel: 'Semanal',
       vlTotal: 20.0,
-      clienteId: cliente3.id,
-      funcionarioId: funcionario3.id
+      clienteId: 3,
+      funcionarioId: 4
     });
 
     const aluguel4 = await AluguelDeLivro.create({
       dtAluguel: new Date('2025-03-15'),
-      dtDevolucao: new Date('2025-03-30'),
+      dtDevolucao: new Date('2025-06-30'),
       dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
-      clienteId: cliente4.id,
-      funcionarioId: funcionario4.id
+      clienteId: 4,
+      funcionarioId: 3
     });
 
 
