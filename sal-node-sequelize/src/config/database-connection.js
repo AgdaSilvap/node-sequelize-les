@@ -326,7 +326,8 @@ function databaseInserts() {
       dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
       clienteId: 1,
-      funcionarioId: 1
+      funcionarioId: 1,
+      livrosId: livro1.id
     });
 
     const aluguel2 = await AluguelDeLivro.create({
@@ -335,7 +336,8 @@ function databaseInserts() {
       dsTipoAluguel: 'Quinzenal',
       vlTotal: 30.0,
       clienteId: 2,
-      funcionarioId: 2
+      funcionarioId: 2,
+      livrosId: livro1.id
     });
 
     const aluguel3 = await AluguelDeLivro.create({
@@ -344,7 +346,8 @@ function databaseInserts() {
       dsTipoAluguel: 'Semanal',
       vlTotal: 20.0,
       clienteId: 3,
-      funcionarioId: 4
+      funcionarioId: 4,
+      livrosId: livro1.id
     });
 
     const aluguel4 = await AluguelDeLivro.create({
@@ -353,7 +356,8 @@ function databaseInserts() {
       dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
       clienteId: 4,
-      funcionarioId: 3
+      funcionarioId: 3,
+      livrosId: livro1.id
     });
 
 
