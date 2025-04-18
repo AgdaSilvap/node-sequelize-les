@@ -2,7 +2,7 @@ import express from "express";
 
 import { ClienteController } from "./controller/ClienteController.js";
 import { FuncionarioController } from "./controller/FuncionarioController.js";
-// import { AluguelDeLivroController } from "./controller/AluguelDeLivroController.js";
+import { AluguelDeLivroController } from "./controller/AluguelDeLivroController.js";
 
 const routes = express.Router();
 
@@ -18,10 +18,10 @@ routes.post('/funcionarios', FuncionarioController.create);
 routes.put('/funcionarios/:id', FuncionarioController.update);
 routes.delete('/funcionarios/:id', FuncionarioController.delete);
 
-// routes.get('/alugueis', AluguelDeLivroController.findAll);
-// routes.get('/alugueis/:id', AluguelDeLivroController.findByPk);
-// routes.post('/alugueis', AluguelDeLivroController.create);
-// routes.put('/alugueis/:id', AluguelDeLivroController.update);
-// routes.delete('/alugueis/:id', AluguelDeLivroController.delete);
+routes.get('/alugueis', AluguelDeLivroController.findAll);
+routes.get('/alugueis/:id', AluguelDeLivroController.findByPk);
+routes.post('/alugueis', AluguelDeLivroController.create);
+routes.put('/alugueis/:id', AluguelDeLivroController.update);
+routes.delete('/alugueis/:id', AluguelDeLivroController.delete);
 
 export default routes;
