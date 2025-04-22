@@ -1,17 +1,18 @@
 
 import express from "express";
 
-import { ClienteController } from "./controller/ClienteController.js";
-import { FuncionarioController } from "./controller/FuncionarioController.js";
-import { AluguelDeLivroController } from "./controller/AluguelDeLivroController.js";
-import { LivroController } from './controller/LivroController.js';
-import { ReservaController } from './controller/ReservaController.js';
-import { SalaController } from './controller/SalaController.js';
+import { ClienteController } from "./controllers/ClienteController.js";
+import { FuncionarioController } from "./controllers/FuncionarioController.js";
+import { AluguelDeLivroController } from "./controllers/AluguelDeLivroController.js";
+import { LivroController } from './controllers/LivroController.js';
+import { ReservaController } from './controllers/ReservaController.js';
+import { SalaController } from './controllers/SalaController.js';
 import { AutorController } from './controllers/AutorController.js';
 import { EditoraController } from './controllers/EditoraController.js';
 
 const routes = express.Router();
 
+//BIANCA
 routes.get('/clientes', ClienteController.findAll);
 routes.get('/clientes/:id', ClienteController.findByPk);
 routes.post('/clientes', ClienteController.create);
@@ -30,6 +31,7 @@ routes.post('/alugueis', AluguelDeLivroController.create);
 routes.put('/alugueis/:id', AluguelDeLivroController.update);
 routes.delete('/alugueis/:id', AluguelDeLivroController.delete);
 
+//SOFIA
 routes.get('/livros', LivroController.findAll);
 routes.get('/livros/:id', LivroController.findByPk);
 routes.post('/livros', LivroController.create);
@@ -47,6 +49,8 @@ routes.get('/salas/:id', SalaController.findByPk);
 routes.post('/salas', SalaController.create);
 routes.put('/salas/:id', SalaController.update);
 routes.delete('/salas/:id', SalaController.delete);
+
+//AGDA
 
 routes.get('/autores', AutorController.findAll);
 routes.get('/autores/:id', AutorController.findByPk);
