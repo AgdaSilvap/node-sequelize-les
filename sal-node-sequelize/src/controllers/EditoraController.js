@@ -1,4 +1,4 @@
-import { EditoraService } from "../services/EditoraService";
+import { EditoraService } from "../services/EditoraService.js";
 
 class EditoraController {
 
@@ -32,3 +32,5 @@ class EditoraController {
       .catch(next);
   }
 }
+
+export { EditoraController };
