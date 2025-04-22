@@ -1,3 +1,4 @@
+
 import express from "express";
 
 import { ClienteController } from "./controller/ClienteController.js";
@@ -6,6 +7,8 @@ import { AluguelDeLivroController } from "./controller/AluguelDeLivroController.
 import { LivroController } from './controller/LivroController.js';
 import { ReservaController } from './controller/ReservaController.js';
 import { SalaController } from './controller/SalaController.js';
+import { AutorController } from './controllers/AutorController.js';
+import { EditoraController } from './controllers/EditoraController.js';
 
 const routes = express.Router();
 
@@ -45,4 +48,16 @@ routes.post('/salas', SalaController.create);
 routes.put('/salas/:id', SalaController.update);
 routes.delete('/salas/:id', SalaController.delete);
 
-export default routes;
+routes.get('/autores', AutorController.findAll);
+routes.get('/autores/:id', AutorController.findByPk);
+routes.post('/autores', AutorController.create);
+routes.put('/autores/:id', AutorController.update);
+routes.delete('/autores/:id', AutorController.delete);
+
+routes.get('/editoras', EditoraController.findAll);
+routes.get('/editoras/:id', EditoraController.findByPk);
+routes.post('/editoras', EditoraController.create);
+routes.put('/editoras/:id', EditoraController.update);
+routes.delete('/editoras/:id', EditoraController.delete);
+
+export { routes };

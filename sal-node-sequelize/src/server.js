@@ -1,8 +1,8 @@
 import express from 'express';
-import routes from './routes.js';
-import './config/database-connection.js';
-import errorHandler from './_middleware/error-handler.js';
 
+import { routes } from './routes.js';
+import errorHandler from './middleware/error-handler.js';
+import { sequelize } from './config/database-connection.js';
 
 const app = express();
 
