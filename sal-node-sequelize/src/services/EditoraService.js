@@ -12,16 +12,15 @@ class EditoraService {
     return editora;
   }
 
-  //findByLivro?? 
 
   static async create(req) {
     const { nome, cnpj, endereco, telefone, email, website } = req.body;
-    if (nome == null) throw 'O nome da editora deve ser preenchido!';
-    if (cnpj == null) throw 'O CNPJ deve ser preenchido!';
-    if (endereco == null) throw 'O endereço deve ser preenchido!';
-    if (telefone == null) throw 'O telefone deve ser preenchido!';
-    if (email == null) throw 'O email deve ser preenchido!';
-    if (website == null) throw 'O website deve ser preenchido!';
+    if (nome == null || 3 > length(nome) > 50) throw 'O nome da editora deve ser preenchido com no mínimo 3 e no máximo 50 caracteres!';
+    if (cnpj == null || 14 > length(cnpj) > 18) throw 'O CNPJ não foi preenchido corretamente!';
+    if (endereco == null || 5 > length(endereco) > 50) throw 'O endereço deve ser preenchido!';
+    if (telefone == null || 10 > length(telefone) > 17) throw 'O telefone deve ser preenchido com o DDD!';
+    if (email == null || 5 > length(email) > 50) throw 'O email não foi preenchido corretamente!';
+    if (website == null || 5 > length(website) > 50) throw 'O website não foi preenchido corretamente!';
 
     const editora = await Editora.create({ nome, cnpj, endereco, telefone, email, website, editoraId: editora.id });
     return await Editora.findByPk(editora.id, { include: { all: true, nested: true } });
