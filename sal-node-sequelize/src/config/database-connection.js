@@ -325,8 +325,8 @@ function databaseInserts() {
       dtDevolucao: new Date('2025-03-15'),
       dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
-      clienteId: 1,
-      funcionarioId: 1
+      clienteId: cliente1.id,
+      funcionarioId: funcionario1.id
     });
 
     const aluguel2 = await AluguelDeLivro.create({
