@@ -20,9 +20,9 @@ class AluguelDeLivroService {
 
 
   static async create(req) {
-    const { dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, livros } = req.body;
+    const { dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, livros, clienteId, funcionarioId } = req.body;
     const t = await sequelize.transaction();
-    const obj = await AluguelDeLivro.create({ dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal }, { transaction: t });
+    const obj = await AluguelDeLivro.create({ dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, clienteId, funcionarioId }, { transaction: t });
     try {
       await Promise.all(livros.map((livroId) => obj.addLivros(livroId, { transaction: t })));
       await t.commit();
@@ -32,33 +32,6 @@ class AluguelDeLivroService {
       throw new Error('Erro ao associar os livros ao aluguel!');
     }
   }
-
-
-  // static async update(req) {
-  //   const { id } = req.params;
-  //   const { dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, livros } = req.body;
-
-  //   const obj = await AluguelDeLivro.findByPk(id, { include: { all: true, nested: true } });
-
-  //   if (obj == null) throw 'Aluguel não encontrado!';
-
-  //   const t = await sequelize.transaction();
-
-  //   Object.assign(obj, { dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, livros });
-
-  //   await obj.save({ transaction: t });
-
-  //   try {
-  //     await sequelize.models.aluguel_livros.destroy({ where: { aluguelDeLivrosId: obj.id }, transaction: t });
-
-  //     await Promise.all(livros.map(livroId => obj.addLivros(livroId, { transaction: t })));
-  //     await t.commit();
-  //     return await AluguelDeLivro.findByPk(obj.id, { include: { all: true, nested: true } });
-  //   } catch (error) {
-  //     await t.rollback();
-  //     throw "O livro não foi encontrado!";
-  //   }
-  // }
 
   static async update(req) {
     const { id } = req.params;
