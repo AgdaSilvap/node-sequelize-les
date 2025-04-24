@@ -85,20 +85,28 @@ class AluguelDeLivroService {
       throw new Error(`Erro ao atualizar o aluguel de livro: ${error.message || error}`);
     }
   }
-  
 
   static async delete(req) {
     const { id } = req.params;
     const obj = await AluguelDeLivro.findByPk(id);
+  
     if (obj == null) throw 'Aluguel não encontrado!';
+  
+    const hoje = new Date();
+    const devolucao = new Date(obj.dtDevolucao);
+  
+    if (devolucao > hoje) {
+      throw "Não é possível remover um aluguel em aberto!";
+    }
+  
     try {
       await obj.destroy();
       return obj;
     } catch (error) {
-      throw "Não é possível remover um aluguel em aberto!"
+      throw "Erro ao tentar remover o aluguel.";
     }
-
   }
+  
 }
 
 export { AluguelDeLivroService };
