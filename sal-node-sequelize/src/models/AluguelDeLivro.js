@@ -23,6 +23,7 @@ export default class AluguelDeLivro extends Model {
       },
       vlTotal: {
         type: DataTypes.DOUBLE,
+        allowNull: false,
         validate: {
           notEmpty: { msg: 'O valor total deve ser preenchido!' },
           isFloat: { msg: 'O valor total deve ser um número válido!' },
