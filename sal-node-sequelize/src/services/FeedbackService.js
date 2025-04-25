@@ -34,7 +34,7 @@ class FeedbackService {
   static async update(req) {
     const { id } = req.params;
     const { reservaId, experiencia, avaliacao, quantidadePessoas } = req.body;
-    if (reserva == null) throw 'A reserva deve ser informada!';
+    if (reservaId == null) throw 'A reserva deve ser informada!';
     const feedback = await Feedback.findByPk(id, { include: { all: true, nested: true } });
     if (feedback == null) throw 'Feedback não encontrado!';
     const transaction = await sequelize.transaction();
