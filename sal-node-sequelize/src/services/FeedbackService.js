@@ -27,19 +27,28 @@ class FeedbackService {
       return await Feedback.findByPk(feedback.id, { include: { all: true, nested: true } });
     } catch (error) {
       await transaction.rollback();
-      throw "Caiu no catch";
+      throw "Erro na transação";
     }
   }
 
   static async update(req) {
     const { id } = req.params;
-    const { reserva, experiencia, avaliacao, quantidadePessoas } = req.body;
+    const { reservaId, experiencia, avaliacao, quantidadePessoas } = req.body;
     if (reserva == null) throw 'A reserva deve ser informada!';
     const feedback = await Feedback.findByPk(id, { include: { all: true, nested: true } });
     if (feedback == null) throw 'Feedback não encontrado!';
-    Object.assign(feedback, { reservaId: reserva.id, experiencia, avaliacao, quantidadePessoas });
-    await feedback.save();
-    return await Feedback.findByPk(feedback.id, { include: { all: true, nested: true } });
+    const transaction = await sequelize.transaction();
+    Object.assign(feedback, { reservaId: reservaId.id, experiencia, avaliacao, quantidadePessoas });
+
+    await feedback.save({ transaction: transaction });
+    try {
+      await transaction.commit();
+      return await Feedback.findByPk(feedback.id, { include: { all: true, nested: true } });
+    }
+    catch (error) {
+      await transaction.rollback();
+      throw "Erro na transação";
+    }
   }
 
   static async delete(req) {
