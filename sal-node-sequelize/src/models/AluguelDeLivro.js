@@ -23,6 +23,7 @@ export default class AluguelDeLivro extends Model {
       },
       vlTotal: {
         type: DataTypes.DOUBLE,
+        allowNull: false,
         validate: {
           notEmpty: { msg: 'O valor total deve ser preenchido!' },
           isFloat: { msg: 'O valor total deve ser um número válido!' },
@@ -40,7 +41,7 @@ export default class AluguelDeLivro extends Model {
   static associate(models) {
     this.belongsTo(models.cliente, { as: 'cliente', foreignKey: 'clienteId', onDelete: 'CASCADE' });
     this.belongsTo(models.funcionario, { as: 'funcionario', foreignKey: 'funcionarioId', onDelete: 'CASCADE' });
-    this.belongsToMany(models.livro, { as: 'livrosA', through: 'aluguel_livros', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+    this.belongsToMany(models.livro, { as: 'livros', through: 'aluguel_livros', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
   }
 }
 

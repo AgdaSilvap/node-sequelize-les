@@ -1,6 +1,4 @@
-//Sofia
 import { Livro } from "../models/Livro.js";
-
 import sequelize from "../config/database-connection.js";
 
 class LivroService {
@@ -25,26 +23,44 @@ class LivroService {
       dsGenero,
       nrPaginas,
       dsTipo,
-      dtCarga,
-      autor,
-      editora,
-    } = req.body; //autor e editora são associações com outras tabelas
-    if (editora == null) throw "A editora do livro deve ser preenchido!"; //autor e editora são foreign keys
-    if (autor == null) throw "O autor do livro deve ser preenchido!";
-    const obj = await Bairro.create({
-      dsTitulo,
-      dtPublicacao,
-      isbn,
-      dsGenero,
-      nrPaginas,
-      dsTipo,
-      dtCarga,
-      autorId: autor.id,
-      editoraId: editora.id,
-    }); //como autor e editora são foreign keys, a referência fica da forma que coloquei
-    return await Bairro.findByPk(obj.id, {
-      include: { all: true, nested: true },
-    });
+      autorId,
+      editoraId,
+    } = req.body;
+
+    if (!editoraId) throw "A editora do livro deve ser preenchida!";
+    if (!autorId) throw "O autor do livro deve ser preenchido!";
+
+    const t = await sequelize.transaction();
+
+    try {
+      const obj = await Livro.create(
+        {
+          dsTitulo,
+          dtPublicacao,
+          isbn,
+          dsGenero,
+          nrPaginas,
+          dsTipo,
+          autorId,
+          editoraId,
+        },
+        { transaction: t }
+      );
+
+      await t.commit();
+
+      const livroCriado = await Livro.findByPk(obj.id, {
+        include: { all: true, nested: true },
+      });
+
+      console.log("Livro criado com sucesso:", livroCriado);
+      return livroCriado;
+
+    } catch (err) {
+      await t.rollback();
+      console.error("Erro ao criar livro:", err);
+      throw "Erro ao criar o livro. Verifique os dados e tente novamente.";
+    }
   }
 
   static async update(req) {
@@ -56,16 +72,19 @@ class LivroService {
       dsGenero,
       nrPaginas,
       dsTipo,
-      dtCarga,
-      autor,
-      editora,
+      autorId,
+      editoraId,
     } = req.body;
-    if (editora == null) throw "A editora deve ser preenchida!";
-    if (autor == null) throw "O autor do livro deve ser preenchido!";
+
+    if (!editoraId) throw "A editora deve ser preenchida!";
+    if (!autorId) throw "O autor do livro deve ser preenchido!";
+
     const obj = await Livro.findByPk(id, {
       include: { all: true, nested: true },
     });
-    if (obj == null) throw "Livro não encontrado!";
+
+    if (!obj) throw "Livro não encontrado!";
+
     Object.assign(obj, {
       dsTitulo,
       dtPublicacao,
@@ -73,11 +92,12 @@ class LivroService {
       dsGenero,
       nrPaginas,
       dsTipo,
-      dtCarga,
-      autorId: autor.id,
-      editoraId: editora.id,
+      autorId,
+      editoraId,
     });
+
     await obj.save();
+
     return await Livro.findByPk(obj.id, {
       include: { all: true, nested: true },
     });
@@ -86,11 +106,13 @@ class LivroService {
   static async delete(req) {
     const { id } = req.params;
     const obj = await Livro.findByPk(id);
-    if (obj == null) throw "Livro não encontrado!";
+    if (!obj) throw "Livro não encontrado!";
+
     try {
       await obj.destroy();
       return obj;
     } catch (error) {
+      console.error("Erro ao deletar livro:", error);
       throw "Não é possível remover o livro.";
     }
   }

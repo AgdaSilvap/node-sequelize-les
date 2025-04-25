@@ -325,9 +325,8 @@ function databaseInserts() {
       dtDevolucao: new Date('2025-03-15'),
       dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
-      clienteId: 1,
-      funcionarioId: 1,
-      livrosId: livro1.id
+      clienteId: cliente1.id,
+      funcionarioId: funcionario1.id
     });
 
     const aluguel2 = await AluguelDeLivro.create({
@@ -336,8 +335,7 @@ function databaseInserts() {
       dsTipoAluguel: 'Quinzenal',
       vlTotal: 30.0,
       clienteId: 2,
-      funcionarioId: 2,
-      livrosId: livro1.id
+      funcionarioId: 2
     });
 
     const aluguel3 = await AluguelDeLivro.create({
@@ -346,8 +344,7 @@ function databaseInserts() {
       dsTipoAluguel: 'Semanal',
       vlTotal: 20.0,
       clienteId: 3,
-      funcionarioId: 4,
-      livrosId: livro1.id
+      funcionarioId: 4
     });
 
     const aluguel4 = await AluguelDeLivro.create({
@@ -356,9 +353,13 @@ function databaseInserts() {
       dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
       clienteId: 4,
-      funcionarioId: 3,
-      livrosId: livro1.id
+      funcionarioId: 3
     });
+
+    await aluguel1.addLivros(livro1, { through: 'aluguel_livros', });
+    await aluguel2.addLivros(livro2, { through: 'aluguel_livros', });
+    await aluguel3.addLivros(livro3, { through: 'aluguel_livros', });
+    await aluguel4.addLivros(livro4, { through: 'aluguel_livros', });
 
 
   })()
