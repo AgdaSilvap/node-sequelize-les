@@ -9,6 +9,7 @@ import { ReservaController } from './controllers/ReservaController.js';
 import { SalaController } from './controllers/SalaController.js';
 import { AutorController } from './controllers/AutorController.js';
 import { EditoraController } from './controllers/EditoraController.js';
+import { FeedbackController } from './controllers/FeedbackController.js';
 
 const routes = express.Router();
 
@@ -63,5 +64,11 @@ routes.get('/editoras/:id', EditoraController.findByPk);
 routes.post('/editoras', EditoraController.create);
 routes.put('/editoras/:id', EditoraController.update);
 routes.delete('/editoras/:id', EditoraController.delete);
+
+routes.get('/feedbacks', FeedbackController.findAll);
+routes.get('/feedbacks/:id', FeedbackController.findByPk);
+routes.post('/feedbacks', FeedbackController.create);
+routes.put('/feedbacks/:id', FeedbackController.update);
+routes.delete('/feedbacks/:id', FeedbackController.delete);
 
 export { routes };
