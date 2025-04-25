@@ -17,7 +17,7 @@ class Editora extends Model {
           len: { args: [14, 18], msg: 'O CNPJ deve ter entre 14 e 18 caracteres!' },
         }
       },
-      edereco: {
+      endereco: {
         type: DataTypes.STRING,
         validate: {
           notEmpty: { msg: 'O endereço deve ser preenchido!' },
