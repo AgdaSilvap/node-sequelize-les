@@ -1,5 +1,5 @@
 import express from 'express';
-import routes from './routes.js';
+import { routes } from './routes.js';
 import errorHandler from './middleware/error-handler.js';
 
 import sequelize from './config/database-connection.js';
