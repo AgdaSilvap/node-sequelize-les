@@ -46,7 +46,13 @@ export default class Funcionario extends Model {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         validate: {
-          notNull: { msg: "Informação sobre status do Funcionario é necessária!" } // 0: desligado 1: ativo
+          notNull: {
+            msg: "Informação sobre status do funcionário é necessária!",
+          },
+          isIn: {
+            args: [[true, false]],
+            msg: "Status deve ser true (ativo) ou false (desligado)."
+          }
         }
       },
       dtCarga: {
