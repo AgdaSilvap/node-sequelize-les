@@ -16,10 +16,10 @@ class AutorService {
 
   static async create(req) {
     const { nome, nascimento, nacionalidade } = req.body;
-    if (nome == null || 3 > length(nome) > 50) throw 'O nome deve ter entre 3 e 50 caracteres!';
+    if (nome == null || 3 > nome.lenght > 50) throw 'O nome deve ter entre 3 e 50 caracteres!';
     if (nascimento == null) throw 'A data de nascimento deve ser preenchida!';
-    if (nacionalidade == null || 5 > length(nacionalidade) > 30) throw 'A nacionalidade deve ter entre 5 e 30 caracteres!';
-    const autor = await Autor.create({ nome, nascimento, nacionalidade, autorId: autor.id });
+    if (nacionalidade == null || 5 > nacionalidade.lenght > 30) throw 'A nacionalidade deve ter entre 5 e 30 caracteres!';
+    const autor = await Autor.create({ nome, nascimento, nacionalidade });
     return await Autor.findByPk(autor.id, { include: { all: true, nested: true } });
   }
 
