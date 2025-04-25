@@ -15,14 +15,15 @@ class EditoraService {
 
   static async create(req) {
     const { nome, cnpj, endereco, telefone, email, website } = req.body;
-    if (nome == null || 3 > length(nome) > 50) throw 'O nome da editora deve ser preenchido com no mínimo 3 e no máximo 50 caracteres!';
-    if (cnpj == null || 14 > length(cnpj) > 18) throw 'O CNPJ não foi preenchido corretamente!';
-    if (endereco == null || 5 > length(endereco) > 50) throw 'O endereço deve ser preenchido!';
-    if (telefone == null || 10 > length(telefone) > 17) throw 'O telefone deve ser preenchido com o DDD!';
-    if (email == null || 5 > length(email) > 50) throw 'O email não foi preenchido corretamente!';
-    if (website == null || 5 > length(website) > 50) throw 'O website não foi preenchido corretamente!';
+    console.log(req.body);
+    if (nome == null || 3 > nome.lenght > 50) throw 'O nome da editora deve ser preenchido com no mínimo 3 e no máximo 50 caracteres!';
+    if (cnpj == null || 14 > cnpj.lenght > 18) throw 'O CNPJ não foi preenchido corretamente!';
+    if (endereco == null || 5 > endereco.lenght > 50) throw 'O endereço deve ser preenchido com no mínimo 5 e no máximo 50 caracteres!';
+    if (telefone == null || 10 > telefone.lenght > 17) throw 'O telefone deve ser preenchido com o DDD!';
+    if (email == null || 5 > email.lenght > 50) throw 'O email não foi preenchido corretamente!';
+    if (website == null || 5 > website.lenght > 50) throw 'O website não foi preenchido corretamente!';
 
-    const editora = await Editora.create({ nome, cnpj, endereco, telefone, email, website, editoraId: editora.id });
+    const editora = await Editora.create({ nome, cnpj, endereco, telefone, email, website });
     return await Editora.findByPk(editora.id, { include: { all: true, nested: true } });
   }
 
