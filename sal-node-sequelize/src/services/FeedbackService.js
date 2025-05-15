@@ -1,5 +1,6 @@
 import { Feedback } from "../models/Feedback.js";
 import sequelize from "../config/database-connection.js";
+import Reserva from "../models/Reserva.js";
 
 class FeedbackService {
   static async findAll() {
@@ -13,21 +14,22 @@ class FeedbackService {
     return feedback;
   }
 
-
   static async create(req) {
     const { reservaId, experiencia, avaliacao, quantidadePessoas } = req.body;
-    if (reservaId == null) throw 'A reserva deve ser informada!';
-    if (experiencia == null || 3 > experiencia.lenght > 255) throw 'a experiência deve ser descrita com no mínimo 3 e no máximo 255 caracteres!';
-    if (quantidadePessoas == null) throw 'A quantidade de pessoas deve ser informada!';
+    if (await this.verificaCamposFormulario(req.body)) {
 
-    const transaction = await sequelize.transaction();
-    const feedback = await Feedback.create({ reservaId: reservaId, experiencia, avaliacao, quantidadePessoas }, { transaction: transaction });
-    try {
-      await transaction.commit();
-      return await Feedback.findByPk(feedback.id, { include: { all: true, nested: true } });
-    } catch (error) {
-      await transaction.rollback();
-      throw "Erro na transação";
+      if (await this.verificaRegrasDeNegocio(req)) {
+        const transaction = await sequelize.transaction();
+        const feedback = await Feedback.create({ reservaId: reservaId, experiencia, avaliacao, quantidadePessoas }, { transaction: transaction });
+
+        try {
+          await transaction.commit();
+          return await Feedback.findByPk(feedback.id, { include: { all: true, nested: true } });
+        } catch (error) {
+          await transaction.rollback();
+          throw "Erro na transação";
+        }
+      }
     }
   }
 
@@ -61,6 +63,39 @@ class FeedbackService {
     } catch (error) {
       throw 'Não é possível remover um feedback associado à uma reserva!';
     }
+  }
+
+  static async verificaCamposFormulario(body) {
+    const { reservaId, experiencia, quantidadePessoas } = body;
+    if (reservaId == null) throw 'A reserva deve ser informada!';
+    if (experiencia == null || 3 > experiencia.lenght > 255) throw 'a experiência deve ser descrita com no mínimo 3 e no máximo 255 caracteres!';
+    if (quantidadePessoas == null) throw 'A quantidade de pessoas deve ser informada!';
+    return true;
+  }
+
+  ///Implementação da verificação das regras de negócio
+  // 1. Há o limite de 1 feedback por reserva.
+  // 2. Os feedbacks de reservas só podem ser realizados em no máximo 15 dias após a data da reserva.
+  static async verificaRegrasDeNegocio(req) {
+    const { reservaId } = req.body;
+
+    //Verifica regra de negócio 1
+    const feedback = await Feedback.findOne({ where: { reservaId: reservaId } });
+    if (feedback != null) throw 'Já existe um feedback para esta reserva!';
+
+    //Verifica regra de negócio 2
+    const reserva = await Reserva.findByPk(reservaId);
+    if (reserva == null) throw 'Reserva não encontrada!';
+    const dataAtual = new Date();
+    const diffDays = FeedbackService.calculaDiferencaDatasEmDias(dataAtual, reserva.dtInicio);
+    if (diffDays > 15) throw 'O feedback só pode ser realizado em até 15 dias após a data da reserva!';
+    return true;
+  }
+
+  static calculaDiferencaDatasEmDias(dataAtual, dataReserva) {
+    const diffTime = Math.abs(dataAtual - dataReserva);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
   }
 }
 

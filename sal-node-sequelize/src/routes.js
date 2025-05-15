@@ -52,7 +52,6 @@ routes.put('/salas/:id', SalaController.update);
 routes.delete('/salas/:id', SalaController.delete);
 
 //AGDA
-
 routes.get('/autores', AutorController.findAll);
 routes.get('/autores/:id', AutorController.findByPk);
 routes.post('/autores', AutorController.create);
