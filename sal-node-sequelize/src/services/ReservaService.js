@@ -142,7 +142,7 @@ class ReservaService {
       throw new Error("A data/hora de início deve ser anterior à data/hora de término.");
     }
 
-    // Regra 1: Conflito de horários
+    // Regra de Negócio 1: Para realizar a reserva de leitura, a sala deve estar disponível.
     const conflitoWhere = {
       salaId,
       [Op.or]: [
@@ -174,7 +174,7 @@ class ReservaService {
       throw new Error("A sala já está reservada neste horário!");
     }
 
-    // Regra 2: Limite de reservas por cliente no mesmo dia
+    // Regra de Negócio 2: Um cliente pode ter no máximo 2 reservas para um mesmo dia. 
     const reservasCliente = await Reserva.findAll({
       where: {
         clienteId,
@@ -188,15 +188,8 @@ class ReservaService {
       },
     });
 
-    if (reservasCliente.length >= 2) {
+    if (reservasCliente.length >= 3) {
       throw new Error("O cliente já possui duas reservas para este dia!");
-    }
-
-    // Regra 3: Capacidade da sala
-    const sala = await Sala.findByPk(salaId);
-    if (!sala) throw new Error("Sala não encontrada!");
-    if (qtPessoas > sala.qtCapacidade) {
-      throw new Error(`A sala comporta no máximo ${sala.qtCapacidade} pessoas.`);
     }
   }
 }
