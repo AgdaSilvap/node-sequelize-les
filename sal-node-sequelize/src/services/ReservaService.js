@@ -1,20 +1,20 @@
 import { Reserva } from "../models/Reserva.js";
+import { Sala } from "../models/Sala.js";
 import sequelize from "../config/database-connection.js";
+import { Op } from "sequelize";
 
 class ReservaService {
   static async findAll() {
-    const objs = await Reserva.findAll({
+    return await Reserva.findAll({
       include: { all: true, nested: true },
     });
-    return objs;
   }
 
   static async findByPk(req) {
     const { id } = req.params;
-    const obj = await Reserva.findByPk(id, {
+    return await Reserva.findByPk(id, {
       include: { all: true, nested: true },
     });
-    return obj;
   }
 
   static async create(req) {
@@ -25,13 +25,22 @@ class ReservaService {
       clienteId,
       funcionarioId,
       salaId,
+      qtPessoas,
     } = req.body;
 
-    if (!clienteId) throw "O cliente deve ser preenchido!";
-    if (!funcionarioId) throw "O funcionário deve ser preenchido!";
-    if (!salaId) throw "A sala deve ser preenchida!";
+    this.verificaCamposObrigatorios({ clienteId, funcionarioId, salaId });
+
+    await this.verificaRegrasDeNegocio({
+      dtReserva,
+      dtInicio,
+      dtTermino,
+      clienteId,
+      salaId,
+      qtPessoas,
+    });
 
     const t = await sequelize.transaction();
+
     const obj = await Reserva.create(
       {
         dtReserva,
@@ -40,6 +49,7 @@ class ReservaService {
         clienteId,
         funcionarioId,
         salaId,
+        qtPessoas,
       },
       { transaction: t }
     );
@@ -60,17 +70,27 @@ class ReservaService {
       clienteId,
       funcionarioId,
       salaId,
+      qtPessoas,
     } = req.body;
 
-    if (!clienteId) throw "O cliente deve ser preenchido!";
-    if (!funcionarioId) throw "O funcionário deve ser preenchido!";
-    if (!salaId) throw "A sala deve ser preenchida!";
+    const t = await sequelize.transaction();
 
-    const obj = await Reserva.findByPk(id, {
-      include: { all: true, nested: true },
-    });
+    const obj = await Reserva.findByPk(id);
+    if (!obj) throw new Error("Reserva não encontrada!");
 
-    if (!obj) throw "Reserva não encontrada!";
+    this.verificaCamposObrigatorios({ clienteId, funcionarioId, salaId });
+
+    await this.verificaRegrasDeNegocio(
+      {
+        dtReserva,
+        dtInicio,
+        dtTermino,
+        clienteId,
+        salaId,
+        qtPessoas,
+      },
+      id
+    );
 
     Object.assign(obj, {
       dtReserva,
@@ -79,9 +99,12 @@ class ReservaService {
       clienteId,
       funcionarioId,
       salaId,
+      qtPessoas,
     });
 
-    await obj.save();
+    await obj.save({ transaction: t });
+
+    await t.commit();
 
     return await Reserva.findByPk(obj.id, {
       include: { all: true, nested: true },
@@ -90,13 +113,90 @@ class ReservaService {
 
   static async delete(req) {
     const { id } = req.params;
-    const obj = await Reserva.findByPk(id);
-    if (!obj) throw "Reserva não encontrada!";
-    try {
-      await obj.destroy();
-      return obj;
-    } catch (error) {
-      throw "Não é possível remover a reserva.";
+
+    const t = await sequelize.transaction();
+
+    const deletado = await Reserva.destroy(
+      { where: { id }, transaction: t }
+    );
+
+    await t.commit();
+
+    return deletado;
+  }
+
+  static verificaCamposObrigatorios({ clienteId, funcionarioId, salaId }) {
+    if (!clienteId) throw new Error("O cliente deve ser preenchido!");
+    if (!funcionarioId) throw new Error("O funcionário deve ser preenchido!");
+    if (!salaId) throw new Error("A sala deve ser preenchida!");
+  }
+
+  static async verificaRegrasDeNegocio(
+    { dtReserva, dtInicio, dtTermino, clienteId, salaId, qtPessoas },
+    reservaId = null
+  ) {
+    const inicio = new Date(dtInicio);
+    const termino = new Date(dtTermino);
+
+    if (inicio >= termino) {
+      throw new Error("A data/hora de início deve ser anterior à data/hora de término.");
+    }
+
+    // Regra 1: Conflito de horários
+    const conflitoWhere = {
+      salaId,
+      [Op.or]: [
+        {
+          dtInicio: {
+            [Op.between]: [dtInicio, dtTermino],
+          },
+        },
+        {
+          dtTermino: {
+            [Op.between]: [dtInicio, dtTermino],
+          },
+        },
+        {
+          [Op.and]: [
+            { dtInicio: { [Op.lte]: dtInicio } },
+            { dtTermino: { [Op.gte]: dtTermino } },
+          ],
+        },
+      ],
+      ...(reservaId && { id: { [Op.ne]: reservaId } }),
+    };
+
+    const reservasConflitantes = await Reserva.findAll({
+      where: conflitoWhere,
+    });
+
+    if (reservasConflitantes.length > 0) {
+      throw new Error("A sala já está reservada neste horário!");
+    }
+
+    // Regra 2: Limite de reservas por cliente no mesmo dia
+    const reservasCliente = await Reserva.findAll({
+      where: {
+        clienteId,
+        dtReserva: {
+          [Op.between]: [
+            new Date(new Date(dtReserva).setHours(0, 0, 0, 0)),
+            new Date(new Date(dtReserva).setHours(23, 59, 59, 999)),
+          ],
+        },
+        ...(reservaId && { id: { [Op.ne]: reservaId } }),
+      },
+    });
+
+    if (reservasCliente.length >= 2) {
+      throw new Error("O cliente já possui duas reservas para este dia!");
+    }
+
+    // Regra 3: Capacidade da sala
+    const sala = await Sala.findByPk(salaId);
+    if (!sala) throw new Error("Sala não encontrada!");
+    if (qtPessoas > sala.qtCapacidade) {
+      throw new Error(`A sala comporta no máximo ${sala.qtCapacidade} pessoas.`);
     }
   }
 }
