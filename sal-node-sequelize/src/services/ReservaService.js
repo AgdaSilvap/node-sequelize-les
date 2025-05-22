@@ -41,24 +41,29 @@ class ReservaService {
 
     const t = await sequelize.transaction();
 
-    const obj = await Reserva.create(
-      {
-        dtReserva,
-        dtInicio,
-        dtTermino,
-        clienteId,
-        funcionarioId,
-        salaId,
-        qtPessoas,
-      },
-      { transaction: t }
-    );
+    try {
+      const obj = await Reserva.create(
+        {
+          dtReserva,
+          dtInicio,
+          dtTermino,
+          clienteId,
+          funcionarioId,
+          salaId,
+          qtPessoas,
+        },
+        { transaction: t }
+      );
 
-    await t.commit();
+      await t.commit();
 
-    return await Reserva.findByPk(obj.id, {
-      include: { all: true, nested: true },
-    });
+      return await Reserva.findByPk(obj.id, {
+        include: { all: true, nested: true },
+      });
+    } catch (error) {
+      await t.rollback();
+      throw error;
+    }
   }
 
   static async update(req) {
@@ -75,40 +80,45 @@ class ReservaService {
 
     const t = await sequelize.transaction();
 
-    const obj = await Reserva.findByPk(id);
-    if (!obj) throw new Error("Reserva não encontrada!");
+    try {
+      const obj = await Reserva.findByPk(id, { transaction: t });
+      if (!obj) throw new Error("Reserva não encontrada!");
 
-    this.verificaCamposObrigatorios({ clienteId, funcionarioId, salaId });
+      this.verificaCamposObrigatorios({ clienteId, funcionarioId, salaId });
 
-    await this.verificaRegrasDeNegocio(
-      {
+      await this.verificaRegrasDeNegocio(
+        {
+          dtReserva,
+          dtInicio,
+          dtTermino,
+          clienteId,
+          salaId,
+          qtPessoas,
+        },
+        id
+      );
+
+      Object.assign(obj, {
         dtReserva,
         dtInicio,
         dtTermino,
         clienteId,
+        funcionarioId,
         salaId,
         qtPessoas,
-      },
-      id
-    );
+      });
 
-    Object.assign(obj, {
-      dtReserva,
-      dtInicio,
-      dtTermino,
-      clienteId,
-      funcionarioId,
-      salaId,
-      qtPessoas,
-    });
+      await obj.save({ transaction: t });
 
-    await obj.save({ transaction: t });
+      await t.commit();
 
-    await t.commit();
-
-    return await Reserva.findByPk(obj.id, {
-      include: { all: true, nested: true },
-    });
+      return await Reserva.findByPk(obj.id, {
+        include: { all: true, nested: true },
+      });
+    } catch (error) {
+      await t.rollback();
+      throw error;
+    }
   }
 
   static async delete(req) {
@@ -116,13 +126,18 @@ class ReservaService {
 
     const t = await sequelize.transaction();
 
-    const deletado = await Reserva.destroy(
-      { where: { id }, transaction: t }
-    );
+    try {
+      const deletado = await Reserva.destroy(
+        { where: { id }, transaction: t }
+      );
 
-    await t.commit();
+      await t.commit();
 
-    return deletado;
+      return deletado;
+    } catch (error) {
+      await t.rollback();
+      throw error;
+    }
   }
 
   static verificaCamposObrigatorios({ clienteId, funcionarioId, salaId }) {
@@ -142,7 +157,7 @@ class ReservaService {
       throw new Error("A data/hora de início deve ser anterior à data/hora de término.");
     }
 
-    // Regra de Negócio 1: Para realizar a reserva de leitura, a sala deve estar disponível.
+    // Regra de Negócio 1: A sala deve estar disponível.
     const conflitoWhere = {
       salaId,
       [Op.or]: [
@@ -174,7 +189,7 @@ class ReservaService {
       throw new Error("A sala já está reservada neste horário!");
     }
 
-    // Regra de Negócio 2: Um cliente pode ter no máximo 2 reservas para um mesmo dia. 
+    // Regra de Negócio 2: Cliente pode ter no máximo 2 reservas no mesmo dia.
     const reservasCliente = await Reserva.findAll({
       where: {
         clienteId,
@@ -188,7 +203,7 @@ class ReservaService {
       },
     });
 
-    if (reservasCliente.length >= 3) {
+    if (reservasCliente.length >= 2) {
       throw new Error("O cliente já possui duas reservas para este dia!");
     }
   }
