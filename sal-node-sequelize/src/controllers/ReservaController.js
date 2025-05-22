@@ -31,6 +31,16 @@ class ReservaController {
       .then((obj) => res.json(obj))
       .catch(next);
   }
+
+  static async listarReservasPorCliente(req, res, next) {
+    try {
+      const clienteId = req.params.clienteId;
+      const reservas = await ReservaService.listarReservasPorCliente(clienteId);
+      res.json(reservas);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export { ReservaController };
