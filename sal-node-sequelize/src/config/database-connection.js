@@ -149,29 +149,37 @@ function databaseInserts() {
     const editora1 = await Editora.create({
       nome: 'Rocco',
       cnpj: '00.000.000/0001-00',
-      edereco: 'Rua 1, 1',
-      telefone: '111111-1111'
+      endereco: 'Rua 1, 1',
+      telefone: '111111-1111',
+      email: 'email@teste.com',
+      website: 'www.teste.com',
     });
 
     const editora2 = await Editora.create({
       nome: 'Alta Books',
       cnpj: '00.000.000/0002-00',
-      edereco: 'Rua 2, 2',
-      telefone: '222222-2222'
+      endereco: 'Rua 2, 2',
+      telefone: '222222-2222',
+      email: 'email@teste.com',
+      website: 'www.teste.com'
     });
 
     const editora3 = await Editora.create({
-      "nome": "Editora Globo",
-      "cnpj": "11.111.111/0001-11",
-      "endereco": "Avenida Paulista, 1000",
-      "telefone": "(22) 3333-3333"
+      nome: 'Editora Globo',
+      cnpj: '11.111.111/0001-11',
+      endereco: 'Avenida Paulista, 1000',
+      telefone: '(22) 3333-3333',
+      email: 'email@teste.com',
+      website: 'www.teste.com'
     });
 
     const editora4 = await Editora.create({
-      "nome": "Companhia das Letras",
-      "cnpj": "22.222.222/0002-22",
-      "endereco": "Rua dos Editores, 500",
-      "telefone": "(11) 4444-4444"
+      nome: 'Companhia das Letras',
+      cnpj: '22.222.222/0002-22',
+      endereco: 'Rua dos Editores, 500',
+      telefone: '(11) 4444-4444',
+      email: 'email@teste.com',
+      website: 'www.teste.com'
     });
 
     //aluna: SOFIA
@@ -268,15 +276,19 @@ function databaseInserts() {
     const reserva3 = await Reserva.create({
       dtReserva: new Date(),
       dtInicio: new Date(),
-      dtTermino: new Date(new Date().getTime() + 60 * 60 * 1000),
-      salaId: sala3.id
+      dtTermino: new Date(new Date().getTime() + 120 * 60 * 1000),
+      clienteId: 2,
+      funcionarioId: 1,
+      salaId: sala2.id
     });
 
     const reserva4 = await Reserva.create({
       dtReserva: new Date(),
       dtInicio: new Date(),
-      dtTermino: new Date(new Date().getTime() + 60 * 60 * 1000),
-      salaId: sala4.id
+      dtTermino: new Date(new Date().getTime() + 120 * 60 * 1000),
+      clienteId: 1,
+      funcionarioId: 2,
+      salaId: sala2.id
     });
 
 
@@ -285,8 +297,7 @@ function databaseInserts() {
       experiencia: 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
       avaliacao: true,
       quantidadePessoas: 1,
-      id_cliente: 1,
-      id_reserva_sala: 1,
+      reservaId: 1,
       dtCarga: new Date()
     });
 
@@ -294,8 +305,7 @@ function databaseInserts() {
       experiencia: 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
       avaliacao: true,
       quantidadePessoas: 1,
-      id_cliente: 2,
-      id_reserva_sala: 2,
+      reservaId: 2,
       dtCarga: new Date()
     });
 
@@ -303,8 +313,7 @@ function databaseInserts() {
       experiencia: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       avaliacao: true,
       quantidadePessoas: 1,
-      id_cliente: 1,
-      id_reserva_sala: 1,
+      reservaId: 1,
       dtCarga: new Date()
     });
 
@@ -312,8 +321,7 @@ function databaseInserts() {
       experiencia: 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
       avaliacao: true,
       quantidadePessoas: 5,
-      id_cliente: 2,
-      id_reserva_sala: 2,
+      reservaId: 2,
       dtCarga: new Date()
     });
 
