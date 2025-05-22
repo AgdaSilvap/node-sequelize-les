@@ -99,6 +99,14 @@ class ReservaService {
       throw "Não é possível remover a reserva.";
     }
   }
+
+  //Método a ser utilizado no formulário de feedbacks - AGDA
+  static listarReservasPorCliente(clienteId) {
+    return Reserva.findAll({
+      where: { clienteId },
+      include: { all: true, nested: true },
+    });
+  }
 }
 
 export { ReservaService };
