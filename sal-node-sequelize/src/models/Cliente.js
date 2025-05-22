@@ -42,6 +42,12 @@ export default class Cliente extends Model {
           len: { args: [3, 50], msg: 'O nome deve ter entre 3 e 50 caracteres!' },
         }
       },
+      dtCadastro: {
+        type: DataTypes.DATE,
+        validate: {
+          notEmpty: { msg: 'A data de cadastro deve ser preenchida!' },
+        }
+      },
       dtCarga: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,

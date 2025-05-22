@@ -49,6 +49,7 @@ function databaseInserts() {
       dsGenero: 'Feminino',
       dsTelefone: '1199999-9999',
       dsEndereco: 'Rua A, 123',
+      dtCadastro: '2025-01-01'
     });
 
     const cliente2 = await Cliente.create({
@@ -58,6 +59,7 @@ function databaseInserts() {
       dsGenero: 'Masculino',
       dsTelefone: '1188888-8888',
       dsEndereco: 'Rua B, 456',
+      dtCadastro: '2025-02-02'
     });
 
     const cliente3 = await Cliente.create({
@@ -67,6 +69,7 @@ function databaseInserts() {
       dsGenero: 'Feminino',
       dsTelefone: '1177777-7777',
       dsEndereco: 'Rua C, 789',
+      dtCadastro: '2025-03-03'
     });
 
     const cliente4 = await Cliente.create({
@@ -76,6 +79,7 @@ function databaseInserts() {
       dsGenero: 'Masculino',
       dsTelefone: '1166666-6666',
       dsEndereco: 'Rua D, 321',
+      dtCadastro: '2025-05-01'
     });
 
     // Inserindo 4 funcionários
@@ -330,7 +334,7 @@ function databaseInserts() {
     // Inserindo 4 aluguéis de livro - BIANCA
     const aluguel1 = await AluguelDeLivro.create({
       dtAluguel: new Date('2025-03-01'),
-      dtDevolucao: new Date('2025-03-15'),
+      dtDevolucao: new Date('2025-04-01'),
       dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
       clienteId: cliente1.id,
@@ -339,8 +343,8 @@ function databaseInserts() {
 
     const aluguel2 = await AluguelDeLivro.create({
       dtAluguel: new Date('2025-03-05'),
-      dtDevolucao: new Date('2025-03-20'),
-      dsTipoAluguel: 'Quinzenal',
+      dtDevolucao: new Date('2025-03-12'),
+      dsTipoAluguel: 'Semanal',
       vlTotal: 30.0,
       clienteId: 2,
       funcionarioId: 2
@@ -348,7 +352,7 @@ function databaseInserts() {
 
     const aluguel3 = await AluguelDeLivro.create({
       dtAluguel: new Date('2025-03-10'),
-      dtDevolucao: new Date('2025-03-25'),
+      dtDevolucao: new Date('2025-03-17'),
       dsTipoAluguel: 'Semanal',
       vlTotal: 20.0,
       clienteId: 3,
@@ -357,7 +361,7 @@ function databaseInserts() {
 
     const aluguel4 = await AluguelDeLivro.create({
       dtAluguel: new Date('2025-03-15'),
-      dtDevolucao: new Date('2025-06-30'),
+      dtDevolucao: new Date('2025-04-15'),
       dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
       clienteId: 4,
