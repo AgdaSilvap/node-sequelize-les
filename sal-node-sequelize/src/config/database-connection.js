@@ -194,7 +194,7 @@ function databaseInserts() {
       isbn: '978-3-16-148410-0',
       dsGenero: 'Fantasia',
       nrPaginas: 223,
-      dsTipo: 'Impresso',
+      dsTipo: 'Literatura',
       editoraId: editora1.id,
       autorId: autor1.id
     });
@@ -205,7 +205,7 @@ function databaseInserts() {
       isbn: '978-0-261-10236-2',
       dsGenero: 'Fantasia',
       nrPaginas: 1178,
-      dsTipo: 'Impresso',
+      dsTipo: 'Literatura',
       editoraId: editora2.id,
       autorId: autor2.id
     });
@@ -216,7 +216,7 @@ function databaseInserts() {
       isbn: '978-0060934347',
       dsGenero: 'Clássico',
       nrPaginas: 1023,
-      dsTipo: 'Digital',
+      dsTipo: 'Literatura',
       editoraId: editora2.id,
       autorId: autor2.id
     });
@@ -227,9 +227,32 @@ function databaseInserts() {
       isbn: '978-0451524935',
       dsGenero: 'Distopia',
       nrPaginas: 328,
-      dsTipo: 'Físico',
+      dsTipo: 'Técnico',
       editoraId: editora2.id,
       autorId: autor2.id
+    });
+
+    //novos registros para teste de regra de aluguéis - EXCLUIR DEPOIS
+    const livro5 = await Livro.create({
+      dsTitulo: 'Aprendendo Algoritmos',
+      dtPublicacao: '1949-06-08',
+      isbn: '978-0451524936',
+      dsGenero: 'Programação',
+      nrPaginas: 328,
+      dsTipo: 'Técnico',
+      editoraId: editora4.id,
+      autorId: autor3.id
+    });
+
+    const livro6 = await Livro.create({
+      dsTitulo: 'Java8',
+      dtPublicacao: '1949-06-08',
+      isbn: '978-0451524937',
+      dsGenero: 'Programação',
+      nrPaginas: 328,
+      dsTipo: 'Técnico',
+      editoraId: editora3.id,
+      autorId: autor4.id
     });
 
 
@@ -351,27 +374,48 @@ function databaseInserts() {
     });
 
     const aluguel3 = await AluguelDeLivro.create({
-      dtAluguel: new Date('2025-03-10'),
-      dtDevolucao: new Date('2025-03-17'),
+      dtAluguel: new Date('2025-05-09'),
+      dtDevolucao: new Date('2025-05-16'),
       dsTipoAluguel: 'Semanal',
       vlTotal: 20.0,
-      clienteId: 3,
+      clienteId: 4,
       funcionarioId: 4
     });
 
     const aluguel4 = await AluguelDeLivro.create({
-      dtAluguel: new Date('2025-03-15'),
-      dtDevolucao: new Date('2025-04-15'),
-      dsTipoAluguel: 'Mensal',
+      dtAluguel: new Date('2025-05-13'),
+      dtDevolucao: new Date('2025-05-20'),
+      dsTipoAluguel: 'Semanal',
       vlTotal: 50.0,
-      clienteId: 4,
+      clienteId: 3,
       funcionarioId: 3
+    });
+
+    // novos registros para testar regra
+    const aluguel5 = await AluguelDeLivro.create({
+      dtAluguel: new Date('2025-05-12'),
+      dtDevolucao: new Date('2025-05-19'),
+      dsTipoAluguel: 'Semanal',
+      vlTotal: 50.0,
+      clienteId: 3,
+      funcionarioId: 2
+    });
+    const aluguel6 = await AluguelDeLivro.create({
+      dtAluguel: new Date('2025-05-13'),
+      dtDevolucao: new Date('2025-05-20'),
+      dsTipoAluguel: 'Semanal',
+      vlTotal: 50.0,
+      clienteId: 3,
+      funcionarioId: 1
     });
 
     await aluguel1.addLivros(livro1, { through: 'aluguel_livros', });
     await aluguel2.addLivros(livro2, { through: 'aluguel_livros', });
     await aluguel3.addLivros(livro3, { through: 'aluguel_livros', });
     await aluguel4.addLivros(livro4, { through: 'aluguel_livros', });
+    //testes
+    await aluguel5.addLivros(livro5, { through: 'aluguel_livros', });
+    await aluguel6.addLivros(livro6, { through: 'aluguel_livros', });
 
 
   })()
