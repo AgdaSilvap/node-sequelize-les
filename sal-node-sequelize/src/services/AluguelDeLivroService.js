@@ -22,8 +22,11 @@ class AluguelDeLivroService {
 
 
   static async create(req) {
-    const { dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, livros, clienteId, funcionarioId } = req.body;
+    // const { dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, livros, clienteId, funcionarioId } = req.body;
+    const { dtAluguel, vlTotal, livros, clienteId, funcionarioId } = req.body;
     let calculatedDtDevolucao;
+    let dsTipoAluguel;
+
     if (!livros || !Array.isArray(livros) || livros.length === 0) {
       throw new Error('É necessário informar pelo menos um livro para o aluguel.');
     }
@@ -86,6 +89,7 @@ class AluguelDeLivroService {
           throw new Error('Não é permitido alugar livros de tipos diferentes em um mesmo aluguel.');
         }
       }
+
       // -- Fim da Implementação do Requisito Não Funcional 10 --
 
       // -- Início da Implementação da Regra de Negócio 3 --
@@ -153,8 +157,10 @@ class AluguelDeLivroService {
       const dataAluguel = new Date(dtAluguel);
       calculatedDtDevolucao = new Date(dataAluguel);
       if (primeiroLivroTipo.toUpperCase() === 'LITERATURA') {
+        dsTipoAluguel = 'Mensal';
         calculatedDtDevolucao.setMonth(calculatedDtDevolucao.getMonth() + 1);
       } else if (primeiroLivroTipo.toUpperCase() === 'TÉCNICO') {
+        dsTipoAluguel = 'Semanal';
         calculatedDtDevolucao.setDate(calculatedDtDevolucao.getDate() + 7);
       } else {
         throw new Error(`Tipo de livro desconhecido para cálculo de devolução: ${primeiroLivroTipo}. Por favor, use 'Literatura' ou 'Técnico'.`);
@@ -190,8 +196,10 @@ class AluguelDeLivroService {
 
   static async update(req) {
     const { id } = req.params;
-    const { dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, livros, clienteId, funcionarioId } = req.body;
+    // const { dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, livros, clienteId, funcionarioId } = req.body;
+    const { dtAluguel, vlTotal, livros, clienteId, funcionarioId } = req.body;
     let calculatedDtDevolucao;
+    let dsTipoAluguel;
 
     if (!livros || !Array.isArray(livros) || livros.length === 0) {
       throw new Error('É necessário enviar pelo menos um livro para o aluguel.');
@@ -260,6 +268,7 @@ class AluguelDeLivroService {
           throw new Error('Não é permitido atualizar o aluguel com livros de tipos diferentes.');
         }
       }
+      dsTipoAluguel = primeiroLivroTipo;
       // Recalcular dtDevolucao no update, caso a lista de livros ou dtAluguel mude
       const dataAluguel = new Date(dtAluguel || obj.dtAluguel); // Usa a nova dtAluguel ou a existente
       calculatedDtDevolucao = new Date(dataAluguel);
@@ -272,7 +281,7 @@ class AluguelDeLivroService {
         throw new Error(`Tipo de livro desconhecido para cálculo de devolução: '${primeiroLivroTipo}'. Por favor, use 'Literatura' ou 'Técnico'.`);
       }
 
-      Object.assign(obj, { dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, clienteId, funcionarioId });
+      Object.assign(obj, { dtAluguel, dtDevolucao: calculatedDtDevolucao, dsTipoAluguel, vlTotal, clienteId, funcionarioId });
       await obj.save({ transaction: t });
 
       await obj.setLivros([], { transaction: t });

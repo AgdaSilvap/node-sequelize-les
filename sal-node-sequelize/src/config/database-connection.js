@@ -432,7 +432,7 @@ function databaseInserts() {
     await aluguel3.addLivros(livro3, { through: 'aluguel_livros', });
     await aluguel4.addLivros(livro4, { through: 'aluguel_livros', });
     await aluguel5.addLivros(livro5, { through: 'aluguel_livros', });
-    await aluguel6.addLivros(livro6, { through: 'aluguel_livros', });
+    await aluguel6.addLivros([livro1,livro6], { through: 'aluguel_livros', });
 
   })()
 }

@@ -21,17 +21,17 @@ class ClienteService {
   }
 
   static async create(req) {
-    const { dsNome, dsCpf, dtNascimento, dsGenero, dsTelefone, dsEndereco, dtCadastro } = req.body;
-    const obj = await Cliente.create({ dsNome, dsCpf, dtNascimento, dsGenero, dsTelefone, dsEndereco, dtCadastro });
+    const { dsNome, dsCpf, dtNascimento, dsGenero, dsTelefone, dsEndereco } = req.body;
+    const obj = await Cliente.create({ dsNome, dsCpf, dtNascimento, dsGenero, dsTelefone, dsEndereco, dtCadastro: new Date() });
     return await Cliente.findByPk(obj.id, { include: { all: true, nested: true } });
   }
 
   static async update(req) {
     const { id } = req.params;
-    const { dsNome, dsCpf, dtNascimento, dsGenero, dsTelefone, dsEndereco, dtCadastro } = req.body;
+    const { dsNome, dsCpf, dtNascimento, dsGenero, dsTelefone, dsEndereco} = req.body;
     const obj = await Cliente.findByPk(id, { include: { all: true, nested: true } });
     if (obj == null) throw 'Cliente não encontrado!';
-    Object.assign(obj, { dsNome, dsCpf, dtNascimento, dsGenero, dsTelefone, dsEndereco, dtCadastro });
+    Object.assign(obj, { dsNome, dsCpf, dtNascimento, dsGenero, dsTelefone, dsEndereco });
     return await obj.save();
   }
 
