@@ -101,6 +101,15 @@ function databaseInserts() {
       dsEndereco: 'Rua F, 3',
       dtCadastro: '2025-01-12'
     });
+    const cliente7 = await Cliente.create({
+      dsNome: 'Cliente Teste',
+      dsCpf: '555.666.777-88',
+      dtNascimento: '2000-03-30',
+      dsGenero: 'Feminino',
+      dsTelefone: '1166666-888',
+      dsEndereco: 'Rua F, 3',
+      dtCadastro: '2025-01-12'
+    });
 
     // Inserindo 4 funcionários
     const funcionario1 = await Funcionario.create({
@@ -274,6 +283,17 @@ function databaseInserts() {
       autorId: autor3.id
     });
 
+    const livro7 = await Livro.create({
+      dsTitulo: 'Curso Intensivo de C',
+      dtPublicacao: '1999-06-08',
+      isbn: '978-0451524936',
+      dsGenero: 'Programação',
+      nrPaginas: 328,
+      dsTipo: 'Técnico',
+      editoraId: editora4.id,
+      autorId: autor3.id
+    });
+
     //inserindo 4 salas - SOFIA
     const sala1 = await Sala.create({
       qtCapacidade: 10,
@@ -386,8 +406,6 @@ function databaseInserts() {
       dtCarga: new Date()
     });
 
-
-
     // Inserindo 4 aluguéis de livro - BIANCA
     const aluguel1 = await AluguelDeLivro.create({
       dtAluguel: new Date('2025-03-01'),
@@ -400,7 +418,7 @@ function databaseInserts() {
 
     const aluguel2 = await AluguelDeLivro.create({
       dtAluguel: new Date('2025-03-05'),
-      dtDevolucao: new Date('2025-04-12'),
+      dtDevolucao: new Date('2025-04-05'),
       dsTipoAluguel: 'Mensal',
       vlTotal: 30.0,
       clienteId: 2,
@@ -426,8 +444,8 @@ function databaseInserts() {
     });
 
     const aluguel5 = await AluguelDeLivro.create({
-      dtAluguel: new Date('2025-05-20'),
-      dtDevolucao: new Date('2025-05-27'),
+      dtAluguel: new Date('2025-05-23'),
+      dtDevolucao: new Date('2025-05-30'),
       dsTipoAluguel: 'Semanal',
       vlTotal: 50.0,
       clienteId: 5,
@@ -435,9 +453,25 @@ function databaseInserts() {
     });
 
     const aluguel6 = await AluguelDeLivro.create({
-      dtAluguel: new Date('2025-05-20'),
-      dtDevolucao: new Date('2025-05-27'),
-      dsTipoAluguel: 'Mensal',
+      dtAluguel: new Date('2025-05-13'),
+      dtDevolucao: new Date('2025-05-20'),
+      dsTipoAluguel: 'Semanal',
+      vlTotal: 50.0,
+      clienteId: 6,
+      funcionarioId: 3
+    });
+    const aluguel7 = await AluguelDeLivro.create({
+      dtAluguel: new Date('2025-05-12'),
+      dtDevolucao: new Date('2025-05-19'),
+      dsTipoAluguel: 'Semanal',
+      vlTotal: 50.0,
+      clienteId: 6,
+      funcionarioId: 3
+    });
+    const aluguel8 = await AluguelDeLivro.create({
+      dtAluguel: new Date('2025-05-15'),
+      dtDevolucao: new Date('2025-05-22'),
+      dsTipoAluguel: 'Semanal',
       vlTotal: 50.0,
       clienteId: 6,
       funcionarioId: 3
@@ -447,8 +481,10 @@ function databaseInserts() {
     await aluguel2.addLivros(livro2, { through: 'aluguel_livros', });
     await aluguel3.addLivros(livro3, { through: 'aluguel_livros', });
     await aluguel4.addLivros(livro4, { through: 'aluguel_livros', });
-    await aluguel5.addLivros(livro5, { through: 'aluguel_livros', });
-    await aluguel6.addLivros([livro1,livro6], { through: 'aluguel_livros', });
+    await aluguel5.addLivros(livro6, { through: 'aluguel_livros', });
+    await aluguel6.addLivros([livro3,livro4], { through: 'aluguel_livros', });
+    await aluguel7.addLivros(livro2, { through: 'aluguel_livros', });
+    await aluguel8.addLivros(livro5, { through: 'aluguel_livros', });
 
   })()
 }

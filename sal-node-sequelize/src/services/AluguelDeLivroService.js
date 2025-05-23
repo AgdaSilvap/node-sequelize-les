@@ -273,7 +273,7 @@ static async update(req) {
     const primeiroLivroTipo = livrosDetalhes[0].dsTipo;
     for (const livro of livrosDetalhes) {
       if (livro.dsTipo !== primeiroLivroTipo) {
-        throw new Error(`Não é permitido alugar livros de tipos diferentes em um mesmo aluguel. Todos os livros devem ser de ${primeiroLivroTipo}.`);
+        throw new Error(`Não é permitido alugar livros de tipos diferentes em um mesmo aluguel. Todos os livros devem ser do mesmo Tipo (Literatura ou Técnico).`);
       }
     }
     return primeiroLivroTipo;
