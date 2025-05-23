@@ -3,8 +3,8 @@
 		"_postman_id": "83f1386d-e657-4067-9316-a93a484a60d3",
 		"name": "backend-les",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "44441520",
-		"_collection_link": "https://sofia-8953900.postman.co/workspace/Sofia-'s-Workspace~2205dfc8-c3b7-4e1f-8cef-4f9193cf095d/collection/44023233-83f1386d-e657-4067-9316-a93a484a60d3?action=share&source=collection_link&creator=44441520"
+		"_exporter_id": "36520493",
+		"_collection_link": "https://sofia-8953900.postman.co/workspace/Sofia-'s-Workspace~2205dfc8-c3b7-4e1f-8cef-4f9193cf095d/collection/44023233-83f1386d-e657-4067-9316-a93a484a60d3?action=share&source=collection_link&creator=36520493"
 	},
 	"item": [
 		{
@@ -449,9 +449,27 @@
 			"item": [
 				{
 					"name": "List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// Regra de Negócio 2: Um cliente pode ter no máximo 2 reservas para um mesmo dia. \r\n{\r\n  \"dtReserva\": \"2025-05-18\",\r\n  \"dtInicio\": \"2025-05-18T06:00:00\",\r\n  \"dtTermino\": \"2025-05-18T07:00:00\",\r\n  \"clienteId\": 1,\r\n  \"funcionarioId\": 2,\r\n  \"salaId\": 1,\r\n  \"qtPessoas\": 3\r\n}\r\n// {\r\n//   \"dtReserva\": \"2025-05-18\",\r\n//   \"dtInicio\": \"2025-05-18T14:00:00\",\r\n//   \"dtTermino\": \"2025-05-18T15:00:00\",\r\n//   \"clienteId\": 1,\r\n//   \"funcionarioId\": 2,\r\n//   \"salaId\": 1,\r\n//   \"qtPessoas\": 4\r\n// }\r\n\r\n// {\r\n//   \"dtReserva\": \"2025-05-18\",\r\n//   \"dtInicio\": \"2025-05-18T19:00:00\",\r\n//   \"dtTermino\": \"2025-05-18T20:00:00\",\r\n//   \"clienteId\": 1,\r\n//   \"funcionarioId\": 2,\r\n//   \"salaId\": 2,\r\n//   \"qtPessoas\": 5\r\n// }\r\n"
+						},
+						"url": {
+							"raw": "http://localhost:3333/reservas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"reservas"
+							]
+						}
 					},
 					"response": []
 				},
@@ -459,7 +477,19 @@
 					"name": "Get",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/reservas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"reservas",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
@@ -470,7 +500,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"dtReserva\": \"2025-04-24T10:00:00.000Z\",\r\n  \"dtInicio\": \"2025-04-25T14:00:00.000Z\",\r\n  \"dtTermino\": \"2025-04-25T16:00:00.000Z\",\r\n  \"clienteId\": 1,\r\n  \"funcionarioId\": 1,\r\n  \"salaId\": 1\r\n}\r\n\r\n// {\r\n//   \"dtReserva\": \"2025-04-22T09:00:00.000Z\",\r\n//   \"dtInicio\": \"2025-04-26T08:00:00.000Z\",\r\n//   \"dtTermino\": \"2025-04-26T10:00:00.000Z\",\r\n//   \"clienteId\": 2,\r\n//   \"funcionarioId\": 1,\r\n//   \"salaId\": 2\r\n// }\r\n\r\n// {\r\n//   \"dtReserva\": \"2025-04-23T11:30:00.000Z\",\r\n//   \"dtInicio\": \"2025-04-27T15:00:00.000Z\",\r\n//   \"dtTermino\": \"2025-04-27T18:00:00.000Z\",\r\n//   \"clienteId\": 3,\r\n//   \"funcionarioId\": 2,\r\n//   \"salaId\": 3\r\n// }",
+							"raw": "{\r\n  \"dtReserva\": \"2025-05-18\",\r\n  \"dtInicio\": \"2025-05-18T19:00:00\",\r\n  \"dtTermino\": \"2025-05-18T20:00:00\",\r\n  \"clienteId\": 3,\r\n  \"funcionarioId\": 2,\r\n  \"salaId\": 1,\r\n  \"qtPessoas\": 3\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -575,6 +605,90 @@
 							"path": [
 								"reservas",
 								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Regra 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// Regra de Negócio 1: Para realizar a reserva de leitura, a sala deve estar disponível.\r\n{\r\n  \"dtReserva\": \"2025-06-01T12:00:00\",\r\n  \"dtInicio\": \"2025-06-01T10:00:00\",\r\n  \"dtTermino\": \"2025-06-01T11:00:00\",\r\n  \"clienteId\": 1,\r\n  \"funcionarioId\": 1,\r\n  \"salaId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/reservas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"reservas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Regra 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// Regra de Negócio 2: Um cliente pode ter no máximo 2 reservas para um mesmo dia. \r\n{\r\n  \"dtReserva\": \"2025-05-18T05:00:00\",\r\n  \"dtInicio\": \"2025-06-03T06:00:00\",\r\n  \"dtTermino\": \"2025-06-03T07:00:00\",\r\n  \"clienteId\": 2,\r\n  \"funcionarioId\": 2,\r\n  \"salaId\": 1,\r\n  \"qtPessoas\": 3\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/reservas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"reservas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Regra 3",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "//Regra de Negócio 3: Clientes com menos de 30 anos só podem fazer 1 reserva por mês\r\n{\r\n  \"dtReserva\": \"2025-06-04T08:00:00.000Z\",\r\n  \"dtInicio\": \"2025-06-08T19:00:00.000Z\",\r\n  \"dtTermino\": \"2025-06-08T21:00:00.000Z\",\r\n  \"clienteId\": 4, //esse cliente tem 25 anos\r\n  \"funcionarioId\": 1,\r\n  \"salaId\": 2\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/reservas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"reservas"
 							]
 						}
 					},
@@ -1032,7 +1146,7 @@
 			"name": "alugueis",
 			"item": [
 				{
-					"name": "List",
+					"name": "GET ALL",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1051,12 +1165,12 @@
 					"response": []
 				},
 				{
-					"name": "Get",
+					"name": "GET ONE",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3333/alugueis/4",
+							"raw": "http://localhost:3333/alugueis/6",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1064,20 +1178,20 @@
 							"port": "3333",
 							"path": [
 								"alugueis",
-								"4"
+								"6"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Create",
+					"name": "CLIENTE SEM ALUGUEL PENDENTE (+1 MÊS DE CADASTRO)",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": null,\r\n        \"dtAluguel\": \"2025-05-25\",\r\n        \"dtDevolucao\": \"2025-06-25\",\r\n        \"dsTipoAluguel\": \"Mensal\",\r\n        \"vlTotal\": 50,\r\n        \"clienteId\": 3,\r\n        \"funcionarioId\": 2,\r\n        \"livros\": [2]\r\n}\r\n\r\n",
+							"raw": "{\r\n    \"id\": null,\r\n    \"dtAluguel\": \"2025-05-22\",\r\n    \"vlTotal\": 25,\r\n    \"clienteId\": 1,\r\n    \"funcionarioId\": 1,\r\n    \"livros\": [3]\r\n  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1099,13 +1213,153 @@
 					"response": []
 				},
 				{
-					"name": "Create (Error)",
+					"name": "POST Regra de Negócio 1",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "// {\r\n//     \"id\": null,\r\n//         \"dtAluguel\": \"\",\r\n//         \"dtDevolucao\": \"2025-05-25\",\r\n//         \"dsTipoAluguel\": \"Mensal\",\r\n//         \"vlTotal\": 50,\r\n//         \"clienteId\": 4,\r\n//         \"funcionarioId\": 1\r\n// }\r\n\r\n{\r\n    \"id\": null,\r\n        \"dtAluguel\": \"2025-05-25\",\r\n        \"dtDevolucao\": \"\",\r\n        \"dsTipoAluguel\": \"Mensal\",\r\n        \"vlTotal\": 50,\r\n        \"clienteId\": 4,\r\n        \"funcionarioId\": 1\r\n}\r\n\r\n// {\r\n//     \"id\": null,\r\n//         \"dtAluguel\": \"2025-05-25\",\r\n//         \"dtDevolucao\": \"2025-06-25\",\r\n//         \"dsTipoAluguel\": \"Mensal\",\r\n//         \"vlTotal\": \"\",\r\n//         \"clienteId\": 4,\r\n//         \"funcionarioId\": 1\r\n// }\r\n\r\n// {\r\n//     \"id\": null,\r\n//         \"dtAluguel\": \"2025-05-25\",\r\n//         \"dtDevolucao\": \"2025-06-25\",\r\n//         \"dsTipoAluguel\": \"\",\r\n//         \"vlTotal\": 50,\r\n//         \"clienteId\": 4,\r\n//         \"funcionarioId\": 1\r\n// }",
+							"raw": "//Um cliente só poderá alugar mais de 1 livro por mês se ele tiver mais de 1 mês de cadastro no sistema.\r\n\r\n{\r\n    \"id\": null,\r\n    \"dtAluguel\": \"2025-05-22\",\r\n    \"vlTotal\": 20,\r\n    \"clienteId\": 4,\r\n    \"funcionarioId\": 1,\r\n    \"livros\": [2]\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/alugueis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"alugueis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Regra de Negócio 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// O Cliente pode realizar o aluguel de no máximo 3 livros por mês.\r\n\r\n{\r\n    \"id\": null,\r\n    \"dtAluguel\": \"2025-05-22\",\r\n    \"vlTotal\": 20,\r\n    \"clienteId\": 6,\r\n    \"funcionarioId\": 1,\r\n    \"livros\": [7]\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/alugueis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"alugueis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Regra de Negócio 3",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// Um cliente só pode realizar outro aluguel quando todos os livros de um aluguel previamente realizado forem devolvidos.\r\n\r\n{\r\n    \"id\": null,\r\n    \"dtAluguel\": \"2025-05-22\",\r\n    \"vlTotal\": 20,\r\n    \"clienteId\": 5,\r\n    \"funcionarioId\": 1,\r\n    \"livros\": [2]\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/alugueis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"alugueis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Requisito Não Funcional 8",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "//O sistema deve garantir que um livro alugado não possa ser alugado por outro cliente até sua devolução.\r\n{\r\n    \"id\": null,\r\n    \"dtAluguel\": \"2025-05-22\",\r\n    \"vlTotal\": 20,\r\n    \"clienteId\": 2,\r\n    \"funcionarioId\": 1,\r\n    \"livros\": [6]\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/alugueis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"alugueis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Requisito Não Funcional 10",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// Livros de tipos diferentes não podem estar no mesmo aluguel.\r\n{\r\n    \"id\": null,\r\n    \"dtAluguel\": \"2025-05-22\",\r\n    \"vlTotal\": 20,\r\n    \"clienteId\": 2,\r\n    \"funcionarioId\": 1,\r\n    \"livros\": [2,7]\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/alugueis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"alugueis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST com Erros de Campos Básicos",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": null,\r\n        \"dtAluguel\": \"2025-05-23\",\r\n        \"vlTotal\": \"\",\r\n        \"clienteId\": 7,\r\n        \"funcionarioId\": 1,\r\n        \"livros\": [2]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1133,7 +1387,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 5,\r\n        \"dtAluguel\": \"2025-04-18\",\r\n        \"dtDevolucao\": \"2025-05-18\",\r\n        \"dsTipoAluguel\": \"Mensal\",\r\n        \"vlTotal\": 60,\r\n        \"clienteId\": 1,\r\n        \"funcionarioId\": 1,\r\n        \"livros\": [4]\r\n}",
+							"raw": "{\r\n    \"id\": 5,\r\n        \"dtAluguel\": \"2025-05-18\",\r\n        \"vlTotal\": 60,\r\n        \"clienteId\": 6,\r\n        \"funcionarioId\": 1,\r\n        \"livros\": [4]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1161,7 +1415,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3333/alugueis/5",
+							"raw": "http://localhost:3333/alugueis/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1169,7 +1423,7 @@
 							"port": "3333",
 							"path": [
 								"alugueis",
-								"5"
+								"1"
 							]
 						}
 					},
@@ -1526,7 +1780,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\t\"reservaId\": 2,\r\n\t\"experiencia\": \"lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua\",\r\n\t\"avaliacao\": true,\r\n\t\"quantidadePessoas\": 1\r\n}\r\n\r\n",
+							"raw": "{\r\n\t\"reservaId\": 3,\r\n\t\"experiencia\": \"lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua\",\r\n\t\"avaliacao\": true,\r\n\t\"quantidadePessoas\": 1\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1619,6 +1873,139 @@
 							"path": [
 								"feedbacks",
 								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reservas teste RN feedback",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n  // Reserva antiga — ativa RN2: feedback fora do prazo de 15 dias\n  //RESERVA 5\n//   {\n//   \"dtReserva\": \"2025-04-24T10:00:00.000Z\",\n//   \"dtInicio\": \"2025-04-25T14:00:00.000Z\",\n//   \"dtTermino\": \"2025-04-25T16:00:00.000Z\",\n//   \"clienteId\": 1,\n//   \"funcionarioId\": 1,\n//   \"salaId\": 1\n// }\n\n//---------------------------------------------------------\n//ativam RN3: limite de 5 feedbacks no mesmo mês por cliente\n//RESERVA 6\n//   {\n//     \"dtReserva\": \"2025-05-30T10:00:00.000Z\",\n//     \"dtInicio\": \"2025-05-30T14:00:00.000Z\",\n//     \"dtTermino\": \"2025-05-30T16:00:00.000Z\",\n//     \"clienteId\": 1,\n//     \"funcionarioId\": 1,\n//     \"salaId\": 1\n//   }\n//---------------------------------------------------------\n//RESERVA 7\n//   {\n//     \"dtReserva\": \"2025-05-30T10:00:00.000Z\",\n//     \"dtInicio\": \"2025-05-30T14:00:00.000Z\",\n//     \"dtTermino\": \"2025-05-30T16:00:00.000Z\",\n//     \"clienteId\": 1,\n//     \"funcionarioId\": 1,\n//     \"salaId\": 1\n//   }\n\n\n\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/reservas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"reservas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RN1 - erro",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reservaId\": 1,\n  \"experiencia\": \"A experiência foi excelente, ambiente limpo e confortável.\",\n  \"avaliacao\": true,\n  \"quantidadePessoas\": 2\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/feedbacks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"feedbacks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RN2 - erro",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"reservaId\": 6,\r\n\t\"experiencia\": \"lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua\",\r\n\t\"avaliacao\": true,\r\n\t\"quantidadePessoas\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/feedbacks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"feedbacks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RN3 - erro",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"reservaId\": 7,\n\t\"experiencia\": \"lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua\",\n\t\"avaliacao\": true,\n\t\"quantidadePessoas\": 1\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/feedbacks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"feedbacks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reservas por cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/clientes/1/reservas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"clientes",
+								"1",
+								"reservas"
 							]
 						}
 					},
