@@ -20,280 +20,123 @@ class AluguelDeLivroService {
     return obj;
   }
 
-
-  static async create(req) {
-    // const { dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, livros, clienteId, funcionarioId } = req.body;
+static async create(req) {
     const { dtAluguel, vlTotal, livros, clienteId, funcionarioId } = req.body;
     let calculatedDtDevolucao;
     let dsTipoAluguel;
 
-    if (!livros || !Array.isArray(livros) || livros.length === 0) {
-      throw new Error('É necessário informar pelo menos um livro para o aluguel.');
-    }
+    this._verificaCamposAluguel(req.body);
 
     try {
-      const livrosDetalhes = await Livro.findAll({
-        where: {
-          id: {
-            [Op.in]: livros
-          }
-        }
-      });
-      if (livrosDetalhes.length !== livros.length) {
-        throw new Error('Um ou mais livros informados não foram encontrados.');
-      }
+    //   const { livrosDetalhes, tipoDosLivros } = await this._verificaRegrasDeNegocio(req.body);
+    const { tipoDosLivros } = await this._verificaRegrasDeNegocio(req.body);
 
-      // -- Início da Implementação do Requisito Não Funcional 8 --
-
-      const hojeUtc = new Date();
-      // hojeUtc.setUTCHours(0, 0, 0, 0); // Zera hora para comparar apenas a data
-      const alugueisAtivosDosLivros = await AluguelDeLivro.findAll({
-        include: {
-          model: Livro,
-          as: 'livros', // Nome da associação no modelo AluguelDeLivro
-          where: {
-            id: {
-              [Op.in]: livros // Filtra pelos IDs dos livros que estamos tentando alugar
-            }
-          },
-          through: { attributes: [] } // Não precisamos dos atributos da tabela pivot aqui
-        },
-        where: {
-          dtDevolucao: {
-            [Op.gt]: hojeUtc // Aluguéis cuja data de devolução ainda não passou
-          }
-        }
-      });
-
-      if (alugueisAtivosDosLivros.length > 0) {
-        const livrosIndisponiveis = new Set();
-        alugueisAtivosDosLivros.forEach(aluguel => {
-          aluguel.livros.forEach(livroIndisponivel => {
-            // Adiciona o livro à lista de indisponíveis APENAS se ele for um dos livros que o cliente está tentando alugar
-            if (livros.includes(livroIndisponivel.id)) {
-              livrosIndisponiveis.add(livroIndisponivel.titulo);
-            }
-          });
-        });
-
-        if (livrosIndisponiveis.size > 0) {
-          const listaLivrosIndisponiveis = Array.from(livrosIndisponiveis).join(', ');
-          throw new Error(`Não é possível alugar. O(s) livro(s) ${listaLivrosIndisponiveis} já está(ão) alugado(s) e ainda não foi(ram) devolvido(s).`);
-        }
-      }
-      // -- Início da Implementação do Requisito Não Funcional 10 --
-      // Livros de tipos diferentes não podem estar no mesmo aluguel.
-      const primeiroLivroTipo = livrosDetalhes[0].dsTipo;
-      for (const livro of livrosDetalhes) {
-        if (livro.dsTipo !== primeiroLivroTipo) {
-          throw new Error('Não é permitido alugar livros de tipos diferentes em um mesmo aluguel.');
-        }
-      }
-
-      // -- Fim da Implementação do Requisito Não Funcional 10 --
-
-      // -- Início da Implementação da Regra de Negócio 3 --
-      const aluguelPendente = await AluguelDeLivro.findOne({
-        where: {
-          clienteId: clienteId,
-          dtDevolucao: {
-            [Op.gt]: hojeUtc
-          }
-        }
-      });
-
-      if (aluguelPendente) {
-        throw new Error(`O cliente possui um aluguel pendente com data de devolução em ${aluguelPendente.dtDevolucao.toLocaleDateString('pt-BR')}. Não é possível realizar um novo aluguel antes da devolução.`);
-      }
-      // -- Fim da Implementação da Regra de Negócio 3 --
-
-      // -- Início da Implementação da Regra de Negócio 1 --
-      const cliente = await Cliente.findByPk(clienteId);
-      if (!cliente) {
-        throw new Error('Cliente não encontrado.');
-      }
-
-      const dtCadastroCliente = new Date(cliente.dtCadastro);
-      const umMesAtras = new Date();
-      umMesAtras.setMonth(umMesAtras.getMonth() - 1);
-
-      const dataAluguelAtual = new Date(dtAluguel);
-
-      let limiteAlugueisParaCliente = 3;
-      // Se o cliente tem menos de 1 mês de cadastro (desde a dtCadastro até a data do aluguel atual)
-      // e o aluguel é para o mesmo mês do cadastro ou mês seguinte, o limite é 1.
-      if (dtCadastroCliente > umMesAtras && dataAluguelAtual.getMonth() === dtCadastroCliente.getMonth() && dataAluguelAtual.getFullYear() === dtCadastroCliente.getFullYear()) {
-        limiteAlugueisParaCliente = 1;
-      }
-      // Se o aluguel atual for no mês imediatamente seguinte ao cadastro, também limitar a 1
-      else if (dtCadastroCliente > umMesAtras &&
-        (dataAluguelAtual.getMonth() === (dtCadastroCliente.getMonth() + 1) % 12) &&
-        (dataAluguelAtual.getFullYear() === dtCadastroCliente.getFullYear() || (dataAluguelAtual.getMonth() === 0 && dtCadastroCliente.getMonth() === 11 && dataAluguelAtual.getFullYear() === dtCadastroCliente.getFullYear() + 1))) {
-        limiteAlugueisParaCliente = 1;
-      }
-      // -- Início da Implementação da Regra de Negócio 2 --
-      // const dataAluguelAtual = new Date(dtAluguel);
-      const primeiroDiaDoMes = new Date(dataAluguelAtual.getFullYear(), dataAluguelAtual.getMonth(), 1);
-      const ultimoDiaDoMes = new Date(dataAluguelAtual.getFullYear(), dataAluguelAtual.getMonth() + 1, 0, 23, 59, 59, 999); // Último milissegundo do último dia do mês
-
-      const totalAlugueisNoMes = await AluguelDeLivro.count({
-        where: {
-          clienteId: clienteId,
-          dtAluguel: {
-            [Op.between]: [primeiroDiaDoMes, ultimoDiaDoMes]
-          }
-        }
-      });
-
-      // const LIMITE_ALUGUEIS_POR_MES = 3;
-      if (totalAlugueisNoMes >= limiteAlugueisParaCliente) {
-        throw new Error(`O cliente já atingiu o limite de ${limiteAlugueisParaCliente} aluguéis neste mês.`);
-      }
-      // -- Fim da Implementação da Regra de Negócio 1 e  2 --
-
-      // -- Início da Implementação do Requisito Não Funcional 9 --
-      //Cada tipo de livro possui uma data de devolução específica. 
-      // Livros técnicos: 1 semana, livros de literatura: 1 mês.
-      const dataAluguel = new Date(dtAluguel);
-      calculatedDtDevolucao = new Date(dataAluguel);
-      if (primeiroLivroTipo.toUpperCase() === 'LITERATURA') {
+      if (tipoDosLivros.toUpperCase() === 'LITERATURA') {
         dsTipoAluguel = 'Mensal';
-        calculatedDtDevolucao.setMonth(calculatedDtDevolucao.getMonth() + 1);
-      } else if (primeiroLivroTipo.toUpperCase() === 'TÉCNICO') {
+        calculatedDtDevolucao = new Date(new Date(dtAluguel).setMonth(new Date(dtAluguel).getMonth() + 1));
+      } else if (tipoDosLivros.toUpperCase() === 'TÉCNICO') {
         dsTipoAluguel = 'Semanal';
-        calculatedDtDevolucao.setDate(calculatedDtDevolucao.getDate() + 7);
+        calculatedDtDevolucao = new Date(new Date(dtAluguel).setDate(new Date(dtAluguel).getDate() + 7));
       } else {
-        throw new Error(`Tipo de livro desconhecido para cálculo de devolução: ${primeiroLivroTipo}. Por favor, use 'Literatura' ou 'Técnico'.`);
+        throw new Error(`Tipo de livro desconhecido para cálculo de devolução: '${tipoDosLivros}'. Por favor, use 'Literatura' ou 'Técnico'.`);
       }
+
     } catch (error) {
-      // Captura erros específicos da lógica de cálculo da data de devolução
-      console.error('Erro de validação ou cálculo da data de devolução:', error.message);
-      throw new Error(`Não foi possível registrar o aluguel. Detalhes: ${error.message}`);
+      console.error(
+        "Erro de validação ou cálculo do aluguel (na criação):",
+        error.message
+      );
+      throw new Error(
+        `Não foi possível registrar o aluguel. Detalhes: ${error.message}`
+      );
     }
-    // -- Fim da Implementação do Requisito Não Funcional 9 --
 
     const t = await sequelize.transaction();
     let obj;
-    // const obj = await AluguelDeLivro.create({ dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, clienteId, funcionarioId }, { transaction: t });
     try {
-      obj = await AluguelDeLivro.create({
-        dtAluguel,
-        dtDevolucao: calculatedDtDevolucao, // Usando a data calculada
-        dsTipoAluguel,
-        vlTotal,
-        clienteId,
-        funcionarioId
-      }, { transaction: t });
-      await Promise.all(livros.map((livroId) => obj.addLivros(livroId, { transaction: t })));
+      obj = await AluguelDeLivro.create(
+        {
+          dtAluguel,
+          dtDevolucao: calculatedDtDevolucao,
+          dsTipoAluguel,
+          vlTotal,
+          clienteId,
+          funcionarioId,
+        },
+        { transaction: t }
+      );
+      await Promise.all(
+        livros.map((livroId) => obj.addLivros(livroId, { transaction: t }))
+      );
       await t.commit();
-      return await AluguelDeLivro.findByPk(obj.id, { include: { all: true, nested: true } });
+      return await AluguelDeLivro.findByPk(obj.id, {
+        include: { all: true, nested: true },
+      });
     } catch (error) {
       await t.rollback();
-      console.error('Erro ao registrar o aluguel ou associar os livros:', error);
+      console.error(
+        "Erro ao registrar o aluguel ou associar os livros (na transação):",
+        error
+      );
       throw new Error(`Erro ao registrar o aluguel: ${error.message || error}`);
     }
   }
 
-  static async update(req) {
+static async update(req) {
     const { id } = req.params;
-    // const { dtAluguel, dtDevolucao, dsTipoAluguel, vlTotal, livros, clienteId, funcionarioId } = req.body;
     const { dtAluguel, vlTotal, livros, clienteId, funcionarioId } = req.body;
     let calculatedDtDevolucao;
     let dsTipoAluguel;
 
-    if (!livros || !Array.isArray(livros) || livros.length === 0) {
-      throw new Error('É necessário enviar pelo menos um livro para o aluguel.');
-    }
+    this._verificaCamposAluguel(req.body);
 
-    const obj = await AluguelDeLivro.findByPk(id, { include: { all: true, nested: true } });
+    const obj = await AluguelDeLivro.findByPk(id, {
+      include: { all: true, nested: true },
+    });
 
-    if (obj == null) throw 'Aluguel não encontrado!';
+    if (obj == null) throw "Aluguel não encontrado!";
 
     const t = await sequelize.transaction();
 
     try {
-      const livrosDetalhes = await Livro.findAll({
-        where: {
-          id: {
-            [Op.in]: livros
-          }
-        }
-      });
-      if (livrosDetalhes.length !== livros.length) {
-        throw new Error('Um ou mais livros informados para atualização não foram encontrados.');
-      }
+    //   const { livrosDetalhes, tipoDosLivros } = await this._verificaRegrasDeNegocio(req.body, obj.id);
+    const { tipoDosLivros } = await this._verificaRegrasDeNegocio(req.body);
 
-      const hojeUtc = new Date();
-      const alugueisAtivosDosLivros = await AluguelDeLivro.findAll({
-        include: {
-            model: Livro,
-            as: 'livros',
-            where: {
-                id: {
-                    [Op.in]: livros // Filtra pelos IDs dos livros que estamos tentando alugar
-                }
-            },
-            through: { attributes: [] }
-        },
-        where: {
-            dtDevolucao: {
-                [Op.gt]: hojeUtc
-            },
-            // Exclui o próprio aluguel que está sendo atualizado da verificação de "aluguel ativo"
-            id: {
-                [Op.ne]: obj.id // [Op.ne] significa "not equal" (diferente de)
-            }
-        }
-    });
+      const dataAluguelBase = new Date(dtAluguel || obj.dtAluguel);
+      calculatedDtDevolucao = new Date(dataAluguelBase);
 
-    if (alugueisAtivosDosLivros.length > 0) {
-      const livrosIndisponiveis = new Set();
-      alugueisAtivosDosLivros.forEach(aluguel => {
-          aluguel.livros.forEach(livroIndisponivel => {
-              if (livros.includes(livroIndisponivel.id)) {
-                  livrosIndisponiveis.add(livroIndisponivel.titulo);
-              }
-          });
-      });
-
-      if (livrosIndisponiveis.size > 0) {
-          const listaLivrosIndisponiveis = Array.from(livrosIndisponiveis).join(', ');
-          throw new Error(`Não é possível atualizar. O(s) livro(s) ${listaLivrosIndisponiveis} já está(ão) alugado(s) por outro cliente e ainda não foi(ram) devolvido(s).`);
-      }
-  }
-
-      const primeiroLivroTipo = livrosDetalhes[0].dsTipo;
-      for (const livro of livrosDetalhes) {
-        if (livro.dsTipo !== primeiroLivroTipo) {
-          throw new Error('Não é permitido atualizar o aluguel com livros de tipos diferentes.');
-        }
-      }
-      dsTipoAluguel = primeiroLivroTipo;
-      // Recalcular dtDevolucao no update, caso a lista de livros ou dtAluguel mude
-      const dataAluguel = new Date(dtAluguel || obj.dtAluguel); // Usa a nova dtAluguel ou a existente
-      calculatedDtDevolucao = new Date(dataAluguel);
-
-      if (primeiroLivroTipo.toUpperCase() === 'LITERATURA') {
+      if (tipoDosLivros.toUpperCase() === 'LITERATURA') {
+        dsTipoAluguel = 'Mensal';
         calculatedDtDevolucao.setMonth(calculatedDtDevolucao.getMonth() + 1);
-      } else if (primeiroLivroTipo.toUpperCase() === 'TÉCNICO') {
+      } else if (tipoDosLivros.toUpperCase() === 'TÉCNICO') {
+        dsTipoAluguel = 'Semanal';
         calculatedDtDevolucao.setDate(calculatedDtDevolucao.getDate() + 7);
       } else {
-        throw new Error(`Tipo de livro desconhecido para cálculo de devolução: '${primeiroLivroTipo}'. Por favor, use 'Literatura' ou 'Técnico'.`);
+        throw new Error(`Tipo de livro desconhecido para cálculo de devolução: '${tipoDosLivros}'. Por favor, use 'Literatura' ou 'Técnico'.`);
       }
 
-      Object.assign(obj, { dtAluguel, dtDevolucao: calculatedDtDevolucao, dsTipoAluguel, vlTotal, clienteId, funcionarioId });
+      Object.assign(obj, {
+        dtAluguel,
+        dtDevolucao: calculatedDtDevolucao,
+        dsTipoAluguel,
+        vlTotal,
+        clienteId,
+        funcionarioId,
+      });
       await obj.save({ transaction: t });
 
-      await obj.setLivros([], { transaction: t });
-      await Promise.all(
-        livros.map(livroId => obj.addLivros(livroId, { transaction: t }))
-      );
+      await obj.setLivros(livros, { transaction: t });
+
       await t.commit();
-      return await AluguelDeLivro.findByPk(obj.id, { include: { all: true, nested: true } });
+      return await AluguelDeLivro.findByPk(obj.id, {
+        include: { all: true, nested: true },
+      });
     } catch (error) {
       await t.rollback();
-      console.error('Erro ao atualizar o aluguel de livro:', error);
-      throw new Error(`Erro ao atualizar o aluguel de livro: ${error.message || error}`);
+      console.error("Erro ao atualizar o aluguel de livro:", error);
+      throw new Error(
+        `Erro ao atualizar o aluguel de livro: ${error.message || error}`
+      );
     }
   }
 
@@ -301,10 +144,9 @@ class AluguelDeLivroService {
     const { id } = req.params;
     const obj = await AluguelDeLivro.findByPk(id);
 
-    if (obj == null) throw 'Aluguel não encontrado!';
+    if (obj == null) throw "Aluguel não encontrado!";
 
     const hojeUtc = new Date();
-    // hojeUtc.setUTCHours(0,0,0,0);
     const devolucaoDb = new Date(obj.dtDevolucao);
 
     if (devolucaoDb >= hojeUtc) {
@@ -319,6 +161,186 @@ class AluguelDeLivroService {
     }
   }
 
+  static async _verificaRegrasDeNegocio(dadosAluguel, aluguelIdAtual = null) {
+    const { livros, clienteId, dtAluguel } = dadosAluguel;
+
+    // 1. Verificar se os livros existem e obter detalhes
+    const livrosDetalhes = await Livro.findAll({
+      where: {
+        id: {
+          [Op.in]: livros
+        }
+      }
+    });
+    this._verificaLivrosEncontrados(livros, livrosDetalhes);
+
+    // 2. Verificar disponibilidade dos livros (RNF 8)
+    await this._verificaDisponibilidadeLivros(livros, aluguelIdAtual);
+
+    // 3. Verificar se todos os livros são do mesmo tipo (RNF 10)
+    // O retorno é importante para o cálculo da data de devolução
+    const tipoDosLivros = this._verificaTipoLivroHomogeneo(livrosDetalhes);
+
+    // 4. Verificar se o cliente possui aluguel pendente (RN 3)
+    // Esta regra só se aplica à criação de novos aluguéis, não à atualização de um existente.
+    // No update, não se espera que um cliente possa ter 2 alugueis ABERTOS ao mesmo tempo.
+    if (!aluguelIdAtual) { 
+        await this._verificaAluguelPendenteCliente(clienteId);
+    }
+
+
+    // 5. Verificar limite de aluguéis por mês e tempo de cadastro do cliente (RN 1 e 2)
+    // Esta regra também só se aplica à criação de novos aluguéis.
+    if (!aluguelIdAtual) { 
+        await this._verificaLimiteAlugueisCliente(clienteId, dtAluguel);
+    }
+
+    return { livrosDetalhes, tipoDosLivros };
+  }
+  static _verificaCamposAluguel(body) {
+    const { livros } = body;
+    if (!livros || !Array.isArray(livros) || livros.length === 0) {
+      throw new Error(
+        "É necessário informar pelo menos um livro para o aluguel."
+      );
+    }
+    return true;
+  }
+  static _verificaLivrosEncontrados(livrosRequisicao, livrosDetalhes) {
+    if (livrosDetalhes.length !== livrosRequisicao.length) {
+      throw new Error("Um ou mais livros informados não foram encontrados.");
+    }
+    return true;
+  }
+  static async _verificaDisponibilidadeLivros(
+    livrosIds,
+    aluguelIdAtual = null
+  ) {
+    const agora = new Date(); // Data e hora atual
+
+    const whereCondition = {
+      dtDevolucao: {
+        [Op.gt]: agora, // Aluguéis cuja data de devolução ainda não passou
+      },
+    };
+
+    if (aluguelIdAtual) {
+      whereCondition.id = {
+        [Op.ne]: aluguelIdAtual, // Exclui o próprio aluguel na atualização
+      };
+    }
+
+    const alugueisAtivosDosLivros = await AluguelDeLivro.findAll({
+      include: {
+        model: Livro,
+        as: "livros",
+        where: {
+          id: {
+            [Op.in]: livrosIds,
+          },
+        },
+        through: { attributes: [] },
+      },
+      where: whereCondition,
+    });
+
+    if (alugueisAtivosDosLivros.length > 0) {
+      const livrosIndisponiveis = new Set();
+      alugueisAtivosDosLivros.forEach((aluguel) => {
+        aluguel.livros.forEach((livroIndisponivel) => {
+          if (livrosIds.includes(livroIndisponivel.id)) {
+            livrosIndisponiveis.add(livroIndisponivel.dsTitulo);
+          }
+        });
+      });
+
+      if (livrosIndisponiveis.size > 0) {
+        const listaLivrosIndisponiveis =
+          Array.from(livrosIndisponiveis).join(", ");
+        const acao = aluguelIdAtual ? "atualizar" : "alugar";
+        throw new Error(
+          `Não é possível ${acao}. O(s) livro(s) ${listaLivrosIndisponiveis} já está(ão) alugado(s) por outro cliente e ainda não foi(ram) devolvido(s).`
+        );
+      }
+    }
+    return true;
+  }
+  static _verificaTipoLivroHomogeneo(livrosDetalhes) {
+    if (!livrosDetalhes || livrosDetalhes.length === 0) {
+      throw new Error('Não há livros para verificar o tipo.');
+    }
+
+    const primeiroLivroTipo = livrosDetalhes[0].dsTipo;
+    for (const livro of livrosDetalhes) {
+      if (livro.dsTipo !== primeiroLivroTipo) {
+        throw new Error(`Não é permitido alugar livros de tipos diferentes em um mesmo aluguel. Todos os livros devem ser de ${primeiroLivroTipo}.`);
+      }
+    }
+    return primeiroLivroTipo;
+  }
+  static async _verificaAluguelPendenteCliente(clienteId) {
+    const agora = new Date(); // Data e hora atual para comparação
+
+    const aluguelPendente = await AluguelDeLivro.findOne({
+      where: {
+        clienteId: clienteId,
+        dtDevolucao: {
+          [Op.gt]: agora // Aluguéis cuja data de devolução ainda não passou
+        }
+      }
+    });
+
+    if (aluguelPendente) {
+      throw new Error(`O cliente possui um aluguel pendente com data de devolução em ${aluguelPendente.dtDevolucao.toLocaleDateString('pt-BR')}. Não é possível realizar um novo aluguel antes da devolução.`);
+    }
+    return true;
+  }
+  static async _verificaLimiteAlugueisCliente(clienteId, dtAluguel) {
+    const cliente = await Cliente.findByPk(clienteId);
+    if (!cliente) {
+      throw new Error('Cliente não encontrado.');
+    }
+
+    const dtCadastroCliente = new Date(cliente.dtCadastro);
+    const dataAluguelAtual = new Date(dtAluguel);
+
+    let limiteAlugueisParaCliente = 3; // Limite padrão
+
+    // Calcula 1 mês antes da data atual para verificar cadastro recente
+    const umMesAtras = new Date();
+    umMesAtras.setMonth(umMesAtras.getMonth() - 1);
+
+    // Regra: Cliente com menos de 1 mês de cadastro, e aluguel no mês do cadastro ou mês seguinte, limite é 1.
+    const isMesmoMesCadastro = dataAluguelAtual.getMonth() === dtCadastroCliente.getMonth() &&
+                               dataAluguelAtual.getFullYear() === dtCadastroCliente.getFullYear();
+
+    const isMesSeguinteCadastro = (dataAluguelAtual.getMonth() === (dtCadastroCliente.getMonth() + 1) % 12) &&
+                                 (dataAluguelAtual.getFullYear() === dtCadastroCliente.getFullYear() || // Mesmo ano
+                                 (dataAluguelAtual.getMonth() === 0 && dtCadastroCliente.getMonth() === 11 && dataAluguelAtual.getFullYear() === dtCadastroCliente.getFullYear() + 1)); // Virada de ano
+
+
+    if (dtCadastroCliente > umMesAtras && (isMesmoMesCadastro || isMesSeguinteCadastro)) {
+      limiteAlugueisParaCliente = 1;
+    }
+
+    // Calcular o primeiro e último dia do mês do aluguel atual
+    const primeiroDiaDoMes = new Date(dataAluguelAtual.getFullYear(), dataAluguelAtual.getMonth(), 1);
+    const ultimoDiaDoMes = new Date(dataAluguelAtual.getFullYear(), dataAluguelAtual.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    const totalAlugueisNoMes = await AluguelDeLivro.count({
+      where: {
+        clienteId: clienteId,
+        dtAluguel: {
+          [Op.between]: [primeiroDiaDoMes, ultimoDiaDoMes]
+        }
+      }
+    });
+
+    if (totalAlugueisNoMes >= limiteAlugueisParaCliente) {
+      throw new Error(`O cliente já atingiu o limite de ${limiteAlugueisParaCliente} aluguéis neste mês.`);
+    }
+    return true;
+  }
 }
 
 export { AluguelDeLivroService };
