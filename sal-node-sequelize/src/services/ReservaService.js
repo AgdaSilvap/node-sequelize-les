@@ -1,5 +1,6 @@
 import { Reserva } from "../models/Reserva.js";
 import { Sala } from "../models/Sala.js";
+import { Cliente } from "../models/Cliente.js";
 import sequelize from "../config/database-connection.js";
 import { Op } from "sequelize";
 
@@ -127,9 +128,7 @@ class ReservaService {
     const t = await sequelize.transaction();
 
     try {
-      const deletado = await Reserva.destroy(
-        { where: { id }, transaction: t }
-      );
+      const deletado = await Reserva.destroy({ where: { id }, transaction: t });
 
       await t.commit();
 
@@ -154,10 +153,12 @@ class ReservaService {
     const termino = new Date(dtTermino);
 
     if (inicio >= termino) {
-      throw new Error("A data/hora de início deve ser anterior à data/hora de término.");
+      throw new Error(
+        "A data/hora de início deve ser anterior à data/hora de término."
+      );
     }
 
-    // Regra de Negócio 1: A sala deve estar disponível.
+    // Regra 1: Verificar se a sala está disponível no período
     const conflitoWhere = {
       salaId,
       [Op.or]: [
@@ -178,8 +179,9 @@ class ReservaService {
           ],
         },
       ],
-      ...(reservaId && { id: { [Op.ne]: reservaId } }),
     };
+
+    if (reservaId) conflitoWhere.id = { [Op.ne]: reservaId };
 
     const reservasConflitantes = await Reserva.findAll({
       where: conflitoWhere,
@@ -189,22 +191,58 @@ class ReservaService {
       throw new Error("A sala já está reservada neste horário!");
     }
 
-    // Regra de Negócio 2: Cliente pode ter no máximo 2 reservas no mesmo dia.
-    const reservasCliente = await Reserva.findAll({
+    // Regra 2: Cliente pode ter no máximo 2 reservas no mesmo dia
+    const inicioDia = new Date(new Date(dtReserva).setHours(0, 0, 0, 0));
+    const fimDia = new Date(new Date(dtReserva).setHours(23, 59, 59, 999));
+
+    const reservasClienteDia = await Reserva.findAll({
       where: {
         clienteId,
         dtReserva: {
-          [Op.between]: [
-            new Date(new Date(dtReserva).setHours(0, 0, 0, 0)),
-            new Date(new Date(dtReserva).setHours(23, 59, 59, 999)),
-          ],
+          [Op.between]: [inicioDia, fimDia],
         },
         ...(reservaId && { id: { [Op.ne]: reservaId } }),
       },
     });
 
-    if (reservasCliente.length >= 2) {
+    if (reservasClienteDia.length >= 2) {
       throw new Error("O cliente já possui duas reservas para este dia!");
+    }
+
+    // Regra de Negócio 3: Clientes com menos de 30 anos só podem fazer 1 reserva por mês
+    const cliente = await Cliente.findByPk(clienteId);
+    if (!cliente) throw new Error("Cliente não encontrado!");
+
+    const calcularIdade = (dataNascimento) => {
+      const hoje = new Date();
+      const nascimento = new Date(dataNascimento);
+      let idade = hoje.getFullYear() - nascimento.getFullYear();
+      const mes = hoje.getMonth() - nascimento.getMonth();
+      if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+        idade--;
+      }
+      return idade;
+    };
+
+    const idadeCliente = calcularIdade(cliente.dtNascimento);
+
+    const inicioMes = new Date(inicio.getFullYear(), inicio.getMonth(), 1);
+    const fimMes = new Date(inicio.getFullYear(), inicio.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    const reservasNoMes = await Reserva.findAll({
+      where: {
+        clienteId,
+        dtReserva: {
+          [Op.between]: [inicioMes, fimMes],
+        },
+        ...(reservaId && { id: { [Op.ne]: reservaId } }),
+      },
+    });
+
+    if (idadeCliente < 30 && reservasNoMes.length >= 1) {
+      throw new Error(
+        "Clientes com menos de 30 anos só podem fazer 1 reserva por mês."
+      );
     }
   }
 }
