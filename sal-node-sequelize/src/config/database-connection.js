@@ -49,6 +49,7 @@ function databaseInserts() {
       dsGenero: 'Feminino',
       dsTelefone: '1199999-9999',
       dsEndereco: 'Rua A, 123',
+      dtCadastro: '2025-01-01'
     });
 
     const cliente2 = await Cliente.create({
@@ -58,6 +59,7 @@ function databaseInserts() {
       dsGenero: 'Masculino',
       dsTelefone: '1188888-8888',
       dsEndereco: 'Rua B, 456',
+      dtCadastro: '2025-02-02'
     });
 
     const cliente3 = await Cliente.create({
@@ -67,6 +69,7 @@ function databaseInserts() {
       dsGenero: 'Feminino',
       dsTelefone: '1177777-7777',
       dsEndereco: 'Rua C, 789',
+      dtCadastro: '2025-03-03'
     });
 
     const cliente4 = await Cliente.create({
@@ -76,6 +79,27 @@ function databaseInserts() {
       dsGenero: 'Masculino',
       dsTelefone: '1166666-6666',
       dsEndereco: 'Rua D, 321',
+      dtCadastro: '2025-05-01'
+    });
+
+    const cliente5 = await Cliente.create({
+      dsNome: 'Adriana Fortunato',
+      dsCpf: '555.666.777-88',
+      dtNascimento: '2000-03-30',
+      dsGenero: 'Feminino',
+      dsTelefone: '1166666-7777',
+      dsEndereco: 'Rua Z, 2',
+      dtCadastro: '2025-02-20'
+    });
+
+    const cliente6 = await Cliente.create({
+      dsNome: 'Maria Silva',
+      dsCpf: '555.666.777-88',
+      dtNascimento: '2000-03-30',
+      dsGenero: 'Feminino',
+      dsTelefone: '1166666-888',
+      dsEndereco: 'Rua F, 3',
+      dtCadastro: '2025-01-12'
     });
 
     // Inserindo 4 funcionários
@@ -190,7 +214,7 @@ function databaseInserts() {
       isbn: '978-3-16-148410-0',
       dsGenero: 'Fantasia',
       nrPaginas: 223,
-      dsTipo: 'Impresso',
+      dsTipo: 'Literatura',
       editoraId: editora1.id,
       autorId: autor1.id
     });
@@ -201,33 +225,54 @@ function databaseInserts() {
       isbn: '978-0-261-10236-2',
       dsGenero: 'Fantasia',
       nrPaginas: 1178,
-      dsTipo: 'Impresso',
+      dsTipo: 'Literatura',
       editoraId: editora2.id,
       autorId: autor2.id
     });
 
     const livro3 = await Livro.create({
-      dsTitulo: 'Dom Quixote',
-      dtPublicacao: '1605-01-16',
-      isbn: '978-0060934347',
-      dsGenero: 'Clássico',
-      nrPaginas: 1023,
-      dsTipo: 'Digital',
-      editoraId: editora2.id,
-      autorId: autor2.id
+      dsTitulo: 'Java8',
+      dtPublicacao: '1949-06-08',
+      isbn: '978-0451524937',
+      dsGenero: 'Programação',
+      nrPaginas: 328,
+      dsTipo: 'Técnico',
+      editoraId: editora3.id,
+      autorId: autor4.id
     });
 
     const livro4 = await Livro.create({
-      dsTitulo: '1984',
+      dsTitulo: 'Aprendendo Algoritmos',
       dtPublicacao: '1949-06-08',
-      isbn: '978-0451524935',
-      dsGenero: 'Distopia',
+      isbn: '978-0451524936',
+      dsGenero: 'Programação',
       nrPaginas: 328,
-      dsTipo: 'Físico',
-      editoraId: editora2.id,
-      autorId: autor2.id
+      dsTipo: 'Técnico',
+      editoraId: editora4.id,
+      autorId: autor3.id
     });
 
+    const livro5 = await Livro.create({
+      dsTitulo: 'Anne de Green Gables',
+      dtPublicacao: '1949-06-08',
+      isbn: '978-0451524936',
+      dsGenero: 'Literatura Infantil',
+      nrPaginas: 328,
+      dsTipo: 'Literatura',
+      editoraId: editora4.id,
+      autorId: autor3.id
+    });
+
+    const livro6 = await Livro.create({
+      dsTitulo: 'Curso Intensivo de Python',
+      dtPublicacao: '1999-06-08',
+      isbn: '978-0451524936',
+      dsGenero: 'Programação',
+      nrPaginas: 328,
+      dsTipo: 'Técnico',
+      editoraId: editora4.id,
+      autorId: autor3.id
+    });
 
     //inserindo 4 salas - SOFIA
     const sala1 = await Sala.create({
@@ -346,7 +391,7 @@ function databaseInserts() {
     // Inserindo 4 aluguéis de livro - BIANCA
     const aluguel1 = await AluguelDeLivro.create({
       dtAluguel: new Date('2025-03-01'),
-      dtDevolucao: new Date('2025-03-15'),
+      dtDevolucao: new Date('2025-04-01'),
       dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
       clienteId: cliente1.id,
@@ -355,28 +400,46 @@ function databaseInserts() {
 
     const aluguel2 = await AluguelDeLivro.create({
       dtAluguel: new Date('2025-03-05'),
-      dtDevolucao: new Date('2025-03-20'),
-      dsTipoAluguel: 'Quinzenal',
+      dtDevolucao: new Date('2025-04-12'),
+      dsTipoAluguel: 'Mensal',
       vlTotal: 30.0,
       clienteId: 2,
       funcionarioId: 2
     });
 
     const aluguel3 = await AluguelDeLivro.create({
-      dtAluguel: new Date('2025-03-10'),
-      dtDevolucao: new Date('2025-03-25'),
+      dtAluguel: new Date('2025-05-09'),
+      dtDevolucao: new Date('2025-05-16'),
       dsTipoAluguel: 'Semanal',
       vlTotal: 20.0,
-      clienteId: 3,
+      clienteId: 4,
       funcionarioId: 4
     });
 
     const aluguel4 = await AluguelDeLivro.create({
-      dtAluguel: new Date('2025-03-15'),
-      dtDevolucao: new Date('2025-06-30'),
+      dtAluguel: new Date('2025-05-20'),
+      dtDevolucao: new Date('2025-05-27'),
+      dsTipoAluguel: 'Semanal',
+      vlTotal: 50.0,
+      clienteId: 3,
+      funcionarioId: 3
+    });
+
+    const aluguel5 = await AluguelDeLivro.create({
+      dtAluguel: new Date('2025-05-20'),
+      dtDevolucao: new Date('2025-05-27'),
+      dsTipoAluguel: 'Semanal',
+      vlTotal: 50.0,
+      clienteId: 5,
+      funcionarioId: 3
+    });
+
+    const aluguel6 = await AluguelDeLivro.create({
+      dtAluguel: new Date('2025-05-20'),
+      dtDevolucao: new Date('2025-05-27'),
       dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
-      clienteId: 4,
+      clienteId: 6,
       funcionarioId: 3
     });
 
@@ -384,7 +447,8 @@ function databaseInserts() {
     await aluguel2.addLivros(livro2, { through: 'aluguel_livros', });
     await aluguel3.addLivros(livro3, { through: 'aluguel_livros', });
     await aluguel4.addLivros(livro4, { through: 'aluguel_livros', });
-
+    await aluguel5.addLivros(livro5, { through: 'aluguel_livros', });
+    await aluguel6.addLivros([livro1,livro6], { through: 'aluguel_livros', });
 
   })()
 }
