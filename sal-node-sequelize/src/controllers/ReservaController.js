@@ -1,35 +1,49 @@
-//Sofia
 import { ReservaService } from "../services/ReservaService.js";
 
 class ReservaController {
   static async findAll(req, res, next) {
-    ReservaService.findAll()
-      .then((objs) => res.json(objs))
-      .catch(next);
+    try {
+      const objs = await ReservaService.findAll();
+      res.json(objs);
+    } catch (error) {
+      next(error);
+    }
   }
 
   static async findByPk(req, res, next) {
-    ReservaService.findByPk(req)
-      .then((obj) => res.json(obj))
-      .catch(next);
+    try {
+      const obj = await ReservaService.findByPk(req);
+      res.json(obj);
+    } catch (error) {
+      next(error);
+    }
   }
 
   static async create(req, res, next) {
-    ReservaService.create(req)
-      .then((obj) => res.json(obj))
-      .catch(next);
+    try {
+      const obj = await ReservaService.create(req);
+      res.status(201).json(obj);
+    } catch (error) {
+      res.status(400).json({ erro: error.toString() });
+    }
   }
 
   static async update(req, res, next) {
-    ReservaService.update(req)
-      .then((obj) => res.json(obj))
-      .catch(next);
+    try {
+      const obj = await ReservaService.update(req);
+      res.json(obj);
+    } catch (error) {
+      res.status(400).json({ erro: error.toString() });
+    }
   }
 
   static async delete(req, res, next) {
-    ReservaService.delete(req)
-      .then((obj) => res.json(obj))
-      .catch(next);
+    try {
+      const obj = await ReservaService.delete(req);
+      res.json(obj);
+    } catch (error) {
+      next(error);
+    }
   }
 
   static async listarReservasPorCliente(req, res, next) {
