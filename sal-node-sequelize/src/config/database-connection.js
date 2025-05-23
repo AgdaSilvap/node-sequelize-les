@@ -82,6 +82,26 @@ function databaseInserts() {
       dtCadastro: '2025-05-01'
     });
 
+    const cliente5 = await Cliente.create({
+      dsNome: 'Adriana Fortunato',
+      dsCpf: '555.666.777-88',
+      dtNascimento: '2000-03-30',
+      dsGenero: 'Feminino',
+      dsTelefone: '1166666-7777',
+      dsEndereco: 'Rua Z, 2',
+      dtCadastro: '2025-02-20'
+    });
+
+    const cliente6 = await Cliente.create({
+      dsNome: 'Maria Silva',
+      dsCpf: '555.666.777-88',
+      dtNascimento: '2000-03-30',
+      dsGenero: 'Feminino',
+      dsTelefone: '1166666-888',
+      dsEndereco: 'Rua F, 3',
+      dtCadastro: '2025-01-12'
+    });
+
     // Inserindo 4 funcionários
     const funcionario1 = await Funcionario.create({
       dsNome: 'Bianca Rodrigues',
@@ -211,40 +231,6 @@ function databaseInserts() {
     });
 
     const livro3 = await Livro.create({
-      dsTitulo: 'Dom Quixote',
-      dtPublicacao: '1605-01-16',
-      isbn: '978-0060934347',
-      dsGenero: 'Clássico',
-      nrPaginas: 1023,
-      dsTipo: 'Literatura',
-      editoraId: editora2.id,
-      autorId: autor2.id
-    });
-
-    const livro4 = await Livro.create({
-      dsTitulo: '1984',
-      dtPublicacao: '1949-06-08',
-      isbn: '978-0451524935',
-      dsGenero: 'Distopia',
-      nrPaginas: 328,
-      dsTipo: 'Técnico',
-      editoraId: editora2.id,
-      autorId: autor2.id
-    });
-
-    //novos registros para teste de regra de aluguéis - EXCLUIR DEPOIS
-    const livro5 = await Livro.create({
-      dsTitulo: 'Aprendendo Algoritmos',
-      dtPublicacao: '1949-06-08',
-      isbn: '978-0451524936',
-      dsGenero: 'Programação',
-      nrPaginas: 328,
-      dsTipo: 'Técnico',
-      editoraId: editora4.id,
-      autorId: autor3.id
-    });
-
-    const livro6 = await Livro.create({
       dsTitulo: 'Java8',
       dtPublicacao: '1949-06-08',
       isbn: '978-0451524937',
@@ -255,6 +241,38 @@ function databaseInserts() {
       autorId: autor4.id
     });
 
+    const livro4 = await Livro.create({
+      dsTitulo: 'Aprendendo Algoritmos',
+      dtPublicacao: '1949-06-08',
+      isbn: '978-0451524936',
+      dsGenero: 'Programação',
+      nrPaginas: 328,
+      dsTipo: 'Técnico',
+      editoraId: editora4.id,
+      autorId: autor3.id
+    });
+
+    const livro5 = await Livro.create({
+      dsTitulo: 'Anne de Green Gables',
+      dtPublicacao: '1949-06-08',
+      isbn: '978-0451524936',
+      dsGenero: 'Literatura Infantil',
+      nrPaginas: 328,
+      dsTipo: 'Literatura',
+      editoraId: editora4.id,
+      autorId: autor3.id
+    });
+
+    const livro6 = await Livro.create({
+      dsTitulo: 'Curso Intensivo de Python',
+      dtPublicacao: '1999-06-08',
+      isbn: '978-0451524936',
+      dsGenero: 'Programação',
+      nrPaginas: 328,
+      dsTipo: 'Técnico',
+      editoraId: editora4.id,
+      autorId: autor3.id
+    });
 
     //inserindo 4 salas - SOFIA
     const sala1 = await Sala.create({
@@ -366,8 +384,8 @@ function databaseInserts() {
 
     const aluguel2 = await AluguelDeLivro.create({
       dtAluguel: new Date('2025-03-05'),
-      dtDevolucao: new Date('2025-03-12'),
-      dsTipoAluguel: 'Semanal',
+      dtDevolucao: new Date('2025-04-12'),
+      dsTipoAluguel: 'Mensal',
       vlTotal: 30.0,
       clienteId: 2,
       funcionarioId: 2
@@ -383,40 +401,38 @@ function databaseInserts() {
     });
 
     const aluguel4 = await AluguelDeLivro.create({
-      dtAluguel: new Date('2025-05-13'),
-      dtDevolucao: new Date('2025-05-20'),
+      dtAluguel: new Date('2025-05-20'),
+      dtDevolucao: new Date('2025-05-27'),
       dsTipoAluguel: 'Semanal',
       vlTotal: 50.0,
       clienteId: 3,
       funcionarioId: 3
     });
 
-    // novos registros para testar regra
     const aluguel5 = await AluguelDeLivro.create({
-      dtAluguel: new Date('2025-05-12'),
-      dtDevolucao: new Date('2025-05-19'),
+      dtAluguel: new Date('2025-05-20'),
+      dtDevolucao: new Date('2025-05-27'),
       dsTipoAluguel: 'Semanal',
       vlTotal: 50.0,
-      clienteId: 3,
-      funcionarioId: 2
+      clienteId: 5,
+      funcionarioId: 3
     });
+
     const aluguel6 = await AluguelDeLivro.create({
-      dtAluguel: new Date('2025-05-13'),
-      dtDevolucao: new Date('2025-05-20'),
-      dsTipoAluguel: 'Semanal',
+      dtAluguel: new Date('2025-05-20'),
+      dtDevolucao: new Date('2025-05-27'),
+      dsTipoAluguel: 'Mensal',
       vlTotal: 50.0,
-      clienteId: 3,
-      funcionarioId: 1
+      clienteId: 6,
+      funcionarioId: 3
     });
 
     await aluguel1.addLivros(livro1, { through: 'aluguel_livros', });
     await aluguel2.addLivros(livro2, { through: 'aluguel_livros', });
     await aluguel3.addLivros(livro3, { through: 'aluguel_livros', });
     await aluguel4.addLivros(livro4, { through: 'aluguel_livros', });
-    //testes
     await aluguel5.addLivros(livro5, { through: 'aluguel_livros', });
     await aluguel6.addLivros(livro6, { through: 'aluguel_livros', });
-
 
   })()
 }
