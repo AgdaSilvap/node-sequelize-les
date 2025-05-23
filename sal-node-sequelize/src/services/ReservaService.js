@@ -153,25 +153,15 @@ class ReservaService {
     const termino = new Date(dtTermino);
 
     if (inicio >= termino) {
-      throw new Error(
-        "A data/hora de início deve ser anterior à data/hora de término."
-      );
+      throw new Error("A data/hora de início deve ser anterior à data/hora de término.");
     }
 
-    // Regra 1: Verificar se a sala está disponível no período
+    // Regra 1: Verificar conflito de horários da sala
     const conflitoWhere = {
       salaId,
       [Op.or]: [
-        {
-          dtInicio: {
-            [Op.between]: [dtInicio, dtTermino],
-          },
-        },
-        {
-          dtTermino: {
-            [Op.between]: [dtInicio, dtTermino],
-          },
-        },
+        { dtInicio: { [Op.between]: [dtInicio, dtTermino] } },
+        { dtTermino: { [Op.between]: [dtInicio, dtTermino] } },
         {
           [Op.and]: [
             { dtInicio: { [Op.lte]: dtInicio } },
@@ -179,26 +169,25 @@ class ReservaService {
           ],
         },
       ],
+      ...(reservaId && { id: { [Op.ne]: reservaId } }),
     };
 
-    if (reservaId) conflitoWhere.id = { [Op.ne]: reservaId };
-
-    const reservasConflitantes = await Reserva.findAll({
-      where: conflitoWhere,
-    });
+    const reservasConflitantes = await Reserva.findAll({ where: conflitoWhere });
 
     if (reservasConflitantes.length > 0) {
       throw new Error("A sala já está reservada neste horário!");
     }
 
-    // Regra 2: Cliente pode ter no máximo 2 reservas no mesmo dia
-    const inicioDia = new Date(new Date(dtReserva).setHours(0, 0, 0, 0));
-    const fimDia = new Date(new Date(dtReserva).setHours(23, 59, 59, 999));
+    // Regra 2: Cliente pode ter no máximo 2 reservas no mesmo dia (baseado em dtInicio)
+    const inicioDia = new Date(inicio);
+    inicioDia.setHours(0, 0, 0, 0);
+    const fimDia = new Date(inicio);
+    fimDia.setHours(23, 59, 59, 999);
 
     const reservasClienteDia = await Reserva.findAll({
       where: {
         clienteId,
-        dtReserva: {
+        dtInicio: {
           [Op.between]: [inicioDia, fimDia],
         },
         ...(reservaId && { id: { [Op.ne]: reservaId } }),
@@ -209,7 +198,7 @@ class ReservaService {
       throw new Error("O cliente já possui duas reservas para este dia!");
     }
 
-    // Regra de Negócio 3: Clientes com menos de 30 anos só podem fazer 1 reserva por mês
+    // Regra 3: Clientes com menos de 30 anos só podem fazer 1 reserva por mês
     const cliente = await Cliente.findByPk(clienteId);
     if (!cliente) throw new Error("Cliente não encontrado!");
 
@@ -232,7 +221,7 @@ class ReservaService {
     const reservasNoMes = await Reserva.findAll({
       where: {
         clienteId,
-        dtReserva: {
+        dtInicio: {
           [Op.between]: [inicioMes, fimMes],
         },
         ...(reservaId && { id: { [Op.ne]: reservaId } }),
@@ -240,13 +229,11 @@ class ReservaService {
     });
 
     if (idadeCliente < 30 && reservasNoMes.length >= 1) {
-      throw new Error(
-        "Clientes com menos de 30 anos só podem fazer 1 reserva por mês."
-      );
+      throw new Error("Clientes com menos de 30 anos só podem fazer 1 reserva por mês.");
     }
   }
 
-  //Método a ser utilizado no formulário de feedbacks - AGDA
+  // Método adicional para listar reservas de um cliente
   static listarReservasPorCliente(clienteId) {
     return Reserva.findAll({
       where: { clienteId },

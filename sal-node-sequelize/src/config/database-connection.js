@@ -254,43 +254,59 @@ function databaseInserts() {
       refrigerado: false
     });
 
-    //inserindo 4 reservas - SOFIA
+    //inserindo reservas - SOFIA
     const reserva1 = await Reserva.create({
-      dtReserva: new Date(),
-      dtInicio: new Date(),
-      dtTermino: new Date(new Date().getTime() + 60 * 60 * 1000),
+      dtReserva: new Date('2025-06-01T09:00:00'),     
+      dtInicio: new Date('2025-06-01T10:00:00'),      
+      dtTermino: new Date('2025-06-01T11:00:00'),     
       clienteId: 1,
       funcionarioId: 1,
       salaId: sala1.id
     });
 
     const reserva2 = await Reserva.create({
-      dtReserva: new Date(),
-      dtInicio: new Date(),
-      dtTermino: new Date(new Date().getTime() + 120 * 60 * 1000),
-      clienteId: 2,
+      dtReserva: new Date('2025-06-02T08:30:00'),     
+      dtInicio: new Date('2025-06-02T09:00:00'),     
+      dtTermino: new Date('2025-06-02T11:00:00'),     
       funcionarioId: 2,
       salaId: sala2.id
     });
 
     const reserva3 = await Reserva.create({
-      dtReserva: new Date(),
-      dtInicio: new Date(),
-      dtTermino: new Date(new Date().getTime() + 120 * 60 * 1000),
+      dtReserva: new Date('2025-06-03T08:30:00'),     
+      dtInicio: new Date('2025-06-03T09:00:00'),     
+      dtTermino: new Date('2025-06-03T11:00:00'),    
       clienteId: 2,
       funcionarioId: 1,
       salaId: sala2.id
     });
 
-    const reserva4 = await Reserva.create({
-      dtReserva: new Date(),
-      dtInicio: new Date(),
-      dtTermino: new Date(new Date().getTime() + 120 * 60 * 1000),
+     const reserva4 = await Reserva.create({
+      dtReserva: new Date('2025-06-03T08:30:00'),     
+      dtInicio: new Date('2025-06-03T11:00:00'),     
+      dtTermino: new Date('2025-06-03T12:00:00'),    
+      clienteId: 2,
+      funcionarioId: 1,
+      salaId: sala2.id
+    });
+
+    const reserva5 = await Reserva.create({
+      dtReserva: new Date('2025-06-04T08:30:00'),     
+      dtInicio: new Date('2025-06-04T09:00:00'),     
+      dtTermino: new Date('2025-06-04T11:00:00'),    
       clienteId: 1,
       funcionarioId: 2,
       salaId: sala2.id
     });
 
+    const reserva6 = await Reserva.create({
+      dtReserva: new Date('2025-06-04T08:30:00'),     
+      dtInicio: new Date('2025-06-07T09:00:00'),     
+      dtTermino: new Date('2025-06-07T11:00:00'),    
+      clienteId: 4,
+      funcionarioId: 1,
+      salaId: sala3.id
+    });
 
     //inserindo 4 feedbacks - AGDA
     const feedback1 = await Feedback.create({
