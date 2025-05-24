@@ -321,57 +321,85 @@ function databaseInserts() {
 
     //inserindo reservas - SOFIA
     const reserva1 = await Reserva.create({
-      dtReserva: new Date('2025-06-01T09:00:00'),     
-      dtInicio: new Date('2025-06-01T10:00:00'),      
-      dtTermino: new Date('2025-06-01T11:00:00'),     
+      dtReserva: new Date('2025-06-01T09:00:00'),
+      dtInicio: new Date('2025-06-01T10:00:00'),
+      dtTermino: new Date('2025-06-01T11:00:00'),
       clienteId: 1,
       funcionarioId: 1,
       salaId: sala1.id
     });
 
     const reserva2 = await Reserva.create({
-      dtReserva: new Date('2025-06-02T08:30:00'),     
-      dtInicio: new Date('2025-06-02T09:00:00'),     
-      dtTermino: new Date('2025-06-02T11:00:00'),     
+      dtReserva: new Date('2025-06-02T08:30:00'),
+      dtInicio: new Date('2025-06-02T09:00:00'),
+      dtTermino: new Date('2025-06-02T11:00:00'),
       funcionarioId: 2,
       salaId: sala2.id
     });
 
     const reserva3 = await Reserva.create({
-      dtReserva: new Date('2025-06-03T08:30:00'),     
-      dtInicio: new Date('2025-06-03T09:00:00'),     
-      dtTermino: new Date('2025-06-03T11:00:00'),    
+      dtReserva: new Date('2025-06-03T08:30:00'),
+      dtInicio: new Date('2025-06-03T09:00:00'),
+      dtTermino: new Date('2025-06-03T11:00:00'),
       clienteId: 2,
       funcionarioId: 1,
       salaId: sala2.id
     });
 
-     const reserva4 = await Reserva.create({
-      dtReserva: new Date('2025-06-03T08:30:00'),     
-      dtInicio: new Date('2025-06-03T11:00:00'),     
-      dtTermino: new Date('2025-06-03T12:00:00'),    
+    const reserva4 = await Reserva.create({
+      dtReserva: new Date('2025-06-03T08:30:00'),
+      dtInicio: new Date('2025-06-03T11:00:00'),
+      dtTermino: new Date('2025-06-03T12:00:00'),
       clienteId: 2,
       funcionarioId: 1,
       salaId: sala2.id
     });
 
     const reserva5 = await Reserva.create({
-      dtReserva: new Date('2025-06-04T08:30:00'),     
-      dtInicio: new Date('2025-06-04T09:00:00'),     
-      dtTermino: new Date('2025-06-04T11:00:00'),    
+      dtReserva: new Date('2025-06-04T08:30:00'),
+      dtInicio: new Date('2025-06-04T09:00:00'),
+      dtTermino: new Date('2025-06-04T11:00:00'),
       clienteId: 1,
       funcionarioId: 2,
       salaId: sala2.id
     });
 
     const reserva6 = await Reserva.create({
-      dtReserva: new Date('2025-06-04T08:30:00'),     
-      dtInicio: new Date('2025-06-07T09:00:00'),     
-      dtTermino: new Date('2025-06-07T11:00:00'),    
+      dtReserva: new Date('2025-06-04T08:30:00'),
+      dtInicio: new Date('2025-06-07T09:00:00'),
+      dtTermino: new Date('2025-06-07T11:00:00'),
       clienteId: 4,
       funcionarioId: 1,
       salaId: sala3.id
     });
+
+    const reserva7 = await Reserva.create({
+      dtReserva: new Date('2025-05-30T10:00:00.000Z'),
+      dtInicio: new Date('2025-05-30T14:00:00.000Z'),
+      dtTermino: new Date('2025-05-30T16:00:00.000Z'),
+      clienteId: 1,
+      funcionarioId: 1,
+      salaId: 1
+    });
+
+    const reserva8 = await Reserva.create({
+      dtReserva: new Date('2025-05-30T10:00:00.000Z'),
+      dtInicio: new Date('2025-05-30T14:00:00.000Z'),
+      dtTermino: new Date('2025-05-30T16:00:00.000Z'),
+      clienteId: 1,
+      funcionarioId: 1,
+      salaId: 1
+    });
+
+    const reserva9 = await Reserva.create({
+      dtReserva: new Date('2025-04-24T10:00:00.000Z'),
+      dtInicio: new Date('2025-04-25T14:00:00.000Z'),
+      dtTermino: new Date('2025-04-25T16:00:00.000Z'),
+      clienteId: 1,
+      funcionarioId: 1,
+      salaId: sala3.id
+    });
+
 
     //inserindo 4 feedbacks - AGDA
     const feedback1 = await Feedback.create({
@@ -403,6 +431,14 @@ function databaseInserts() {
       avaliacao: true,
       quantidadePessoas: 5,
       reservaId: 2,
+      dtCarga: new Date()
+    });
+
+    const feedback5 = await Feedback.create({
+      experiencia: 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+      avaliacao: true,
+      quantidadePessoas: 5,
+      reservaId: 1,
       dtCarga: new Date()
     });
 
@@ -482,7 +518,7 @@ function databaseInserts() {
     await aluguel3.addLivros(livro3, { through: 'aluguel_livros', });
     await aluguel4.addLivros(livro4, { through: 'aluguel_livros', });
     await aluguel5.addLivros(livro6, { through: 'aluguel_livros', });
-    await aluguel6.addLivros([livro3,livro4], { through: 'aluguel_livros', });
+    await aluguel6.addLivros([livro3, livro4], { through: 'aluguel_livros', });
     await aluguel7.addLivros(livro2, { through: 'aluguel_livros', });
     await aluguel8.addLivros(livro5, { through: 'aluguel_livros', });
 
