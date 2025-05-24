@@ -119,7 +119,7 @@ class FeedbackService {
       }
     });
 
-    if (totalFeedbacks >= 3) throw 'Só é possível realizar um total de 5 feedbacks por mês!';
+    if (totalFeedbacks >= 3) throw 'Só é possível realizar um total de 3 feedbacks por mês!';
     return true;
   };
 
