@@ -55,6 +55,7 @@ class Editora extends Model {
     })
   }
   static associate(models) {
+    Editora.hasMany(models.livro, { foreignKey: 'editora_id', as: 'livros' });
   }
 
 }

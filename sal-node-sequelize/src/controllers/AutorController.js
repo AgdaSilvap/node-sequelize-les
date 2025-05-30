@@ -32,6 +32,12 @@ class AutorController {
       .catch(next);
   }
 
+  static async listaEditorasPorAutor(req, res, next) {
+    AutorService.listaEditorasPorAutor(req)
+      .then(editoras => res.json(editoras))
+      .catch(next);
+  }
+
 }
 
 export { AutorController };

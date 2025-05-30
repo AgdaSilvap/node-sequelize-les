@@ -31,6 +31,12 @@ class FeedbackController {
       .then(feedback => res.json(feedback))
       .catch(next);
   }
+
+  static async relatorioFeedbackPeriodo(req, res, next) {
+    FeedbackService.relatorioFeedbackPeriodo(req)
+      .then(relatorio => res.json(relatorio))
+      .catch(next);
+  }
 }
 
 export { FeedbackController };
