@@ -183,36 +183,36 @@ class AluguelDeLivroService {
 
     const dataInicio = new Date(dtInicio);
     const dataFim = new Date(dtFim);
-
+    // TO_CHAR("AluguelDeLivro"."dt_aluguel", 'DD/MM/YYYY') AS "Data de Aluguel",
+    // TO_CHAR("AluguelDeLivro"."dt_devolucao", 'DD/MM/YYYY') AS "Data de Devolução",
     const sqlQuery = `
       SELECT
-          "AluguelDeLivro".id AS "aluguelId",
-          "AluguelDeLivro"."dtAluguel",
-          "AluguelDeLivro"."dtDevolucao",
-          "AluguelDeLivro"."dsTipoAluguel",
-          "AluguelDeLivro"."vlTotal",
-          "cliente"."dsNome" AS "clienteNome",
-          "cliente"."dsCpf" AS "clienteCpf",
-          "livros->aluguel_livros"."livroId" AS "livroId",
-          "livros"."nmLivro" AS "livroNome",
-          "livros"."dsTipo" AS "livroTipo",
-          "livros"."vlAluguel" AS "livroValor",
-          "livros->autor"."nome" AS "autorNome"
+          "AluguelDeLivro".id AS "Id do Aluguel",
+          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_aluguel") AS "dtAluguel",
+          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_devolucao") AS "dtDevolucao",
+          "AluguelDeLivro"."ds_tipo_aluguel" AS "Tipo de Aluguel",
+          "AluguelDeLivro"."vl_total",
+          "cliente"."ds_nome" AS "Nome do Cliente",
+          "cliente"."ds_cpf" AS "CPF do Cliente",
+          "livros->aluguel_livros"."livro_id" AS "Id do Livro",
+          "livros"."ds_titulo" AS "Nome do Livro",
+          "livros"."ds_tipo" AS "Tipo do Livro",
+          "livros->autor"."nome" AS "Nome do Autor"
       FROM
           "aluguelDeLivros" AS "AluguelDeLivro"
       INNER JOIN
-          "clientes" AS "cliente" ON "AluguelDeLivro"."clienteId" = "cliente".id
+          "clientes" AS "cliente" ON "AluguelDeLivro"."cliente_id" = "cliente".id
       INNER JOIN
-          "aluguel_livros" AS "livros->aluguel_livros" ON "AluguelDeLivro".id = "livros->aluguel_livros"."aluguelId"
+          "aluguel_livros" AS "livros->aluguel_livros" ON "AluguelDeLivro".id = "livros->aluguel_livros"."aluguel_de_livro_id"
       INNER JOIN
-          "livros" AS "livros" ON "livros->aluguel_livros"."livroId" = "livros".id
+          "livros" AS "livros" ON "livros->aluguel_livros"."livro_id" = "livros".id
       LEFT OUTER JOIN
-          "autores" AS "livros->autor" ON "livros"."autorId" = "livros->autor".id
+          "autores" AS "livros->autor" ON "livros"."autor_id" = "livros->autor".id
       WHERE
-          "AluguelDeLivro"."clienteId" = :clienteId
-          AND "AluguelDeLivro"."dtAluguel" BETWEEN :dtInicio AND :dtFim
+          "AluguelDeLivro"."cliente_id" = :clienteId
+          AND "AluguelDeLivro"."dt_aluguel" BETWEEN :dtInicio AND :dtFim
       ORDER BY
-          "AluguelDeLivro"."dtAluguel" ASC, "cliente"."dsNome" ASC, "livros"."nmLivro" ASC;
+          "AluguelDeLivro"."dt_aluguel" ASC, "cliente"."ds_nome" ASC, "livros"."ds_titulo" ASC;
     `;
 
     try {
@@ -247,34 +247,35 @@ class AluguelDeLivroService {
     const dataInicio = new Date(dtInicio);
     const dataFim = new Date(dtFim);
 
+    // TO_CHAR("AluguelDeLivro"."dt_aluguel", 'DD/MM/YYYY') AS "Data de Aluguel",
+    // TO_CHAR("AluguelDeLivro"."dt_devolucao", 'DD/MM/YYYY') AS "Data de Devolução",
     const sqlQuery = `
       SELECT
-          "autor"."nome" AS "autorNome",
-          "livros".id AS "livroId",
-          "livros"."nmLivro" AS "livroNome",
-          "livros"."dsTipo" AS "livroTipo",
-          "livros"."vlAluguel" AS "livroValor",
-          "AluguelDeLivro".id AS "aluguelId",
-          "AluguelDeLivro"."dtAluguel",
-          "AluguelDeLivro"."dtDevolucao",
-          "cliente".id AS "clienteId",
-          "cliente"."dsNome" AS "clienteNome",
-          "cliente"."dsCpf" AS "clienteCpf"
+          "autor"."nome" AS "Nome do Autor",
+          "livros".id AS "Id do Livro",
+          "livros"."ds_titulo" AS "Nome do Livro",
+          "livros"."ds_tipo" AS "Tipo do Livro",
+          "AluguelDeLivro".id AS "Id do Aluguel",
+          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_aluguel") AS "dtAluguel",
+          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_devolucao") AS "dtDevolucao",
+          "cliente".id AS "Id do Cliente",
+          "cliente"."ds_nome" AS "Nome do Cliente",
+          "cliente"."ds_cpf" AS "CPF do Cliente"
       FROM
           "autores" AS "autor"
       INNER JOIN
-          "livros" AS "livros" ON "livros"."autorId" = "autor".id
+          "livros" AS "livros" ON "livros"."autor_id" = "autor".id
       INNER JOIN
-          "aluguel_livros" AS "aluguel_livros" ON "livros".id = "aluguel_livros"."livroId"
+          "aluguel_livros" AS "aluguel_livros" ON "livros".id = "aluguel_livros"."livro_id"
       INNER JOIN
-          "aluguelDeLivros" AS "AluguelDeLivro" ON "aluguel_livros"."aluguelId" = "AluguelDeLivro".id
+          "aluguelDeLivros" AS "AluguelDeLivro" ON "aluguel_livros"."aluguel_de_livro_id" = "AluguelDeLivro".id
       INNER JOIN
-          "clientes" AS "cliente" ON "AluguelDeLivro"."clienteId" = "cliente".id
+          "clientes" AS "cliente" ON "AluguelDeLivro"."cliente_id" = "cliente".id
       WHERE
           "autor".id = :autorId
-          AND "AluguelDeLivro"."dtAluguel" BETWEEN :dtInicio AND :dtFim
+          AND "AluguelDeLivro"."dt_aluguel" BETWEEN :dtInicio AND :dtFim
       ORDER BY
-          "AluguelDeLivro"."dtAluguel" ASC, "livros"."nmLivro" ASC, "cliente"."dsNome" ASC;
+          "AluguelDeLivro"."dt_aluguel" ASC, "livros"."ds_titulo" ASC, "cliente"."ds_nome" ASC;
     `;
 
     try {
