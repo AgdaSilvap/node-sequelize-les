@@ -33,6 +33,7 @@ export default class Autor extends Model {
   }
 
   static associate(models) {
+    Autor.hasMany(models.livro, { foreignKey: 'autor_id', as: 'livros' });
   }
 }
 
