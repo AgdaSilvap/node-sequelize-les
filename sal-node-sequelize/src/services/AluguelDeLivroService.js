@@ -188,8 +188,8 @@ class AluguelDeLivroService {
     const sqlQuery = `
       SELECT
           "AluguelDeLivro".id AS "Id do Aluguel",
-          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_aluguel") AS "dtAluguel",
-          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_devolucao") AS "dtDevolucao",
+          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_aluguel") AS "Data de Aluguel",
+          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_devolucao") AS "Data de Devolução",
           "AluguelDeLivro"."ds_tipo_aluguel" AS "Tipo de Aluguel",
           "AluguelDeLivro"."vl_total",
           "cliente"."ds_nome" AS "Nome do Cliente",
@@ -256,8 +256,8 @@ class AluguelDeLivroService {
           "livros"."ds_titulo" AS "Nome do Livro",
           "livros"."ds_tipo" AS "Tipo do Livro",
           "AluguelDeLivro".id AS "Id do Aluguel",
-          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_aluguel") AS "dtAluguel",
-          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_devolucao") AS "dtDevolucao",
+          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_aluguel") AS "Data de Aluguel",
+          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_devolucao") AS "Data de Devolução",
           "cliente".id AS "Id do Cliente",
           "cliente"."ds_nome" AS "Nome do Cliente",
           "cliente"."ds_cpf" AS "CPF do Cliente"
