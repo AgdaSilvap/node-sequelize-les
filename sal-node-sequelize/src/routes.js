@@ -59,6 +59,7 @@ routes.get('/autores/:id', AutorController.findByPk);
 routes.post('/autores', AutorController.create);
 routes.put('/autores/:id', AutorController.update);
 routes.delete('/autores/:id', AutorController.delete);
+routes.get('/autores/:id/editoras', AutorController.listaEditorasPorAutor);
 
 routes.get('/editoras', EditoraController.findAll);
 routes.get('/editoras/:id', EditoraController.findByPk);

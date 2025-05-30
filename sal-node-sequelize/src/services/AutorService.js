@@ -1,4 +1,6 @@
 import { Autor } from "../models/Autor.js";
+import { Editora } from "../models/Editora.js";
+import { Livro } from "../models/Livro.js";
 
 class AutorService {
 
@@ -45,6 +47,33 @@ class AutorService {
       throw 'Não é possível remover um autor associado à um livro!';
     }
   }
+
+  static async listaEditorasPorAutor(req) {
+  const { id } = req.params;
+
+  const autor = await Autor.findByPk(id, {
+    include: [{
+      association: 'livros',
+      include: [{
+        association: 'editora'
+      }]
+    }]
+  });
+
+  if (!autor) throw 'Autor não encontrado!';
+
+  const livros = autor.livros || [];
+
+  const editoras = livros
+    .map(livro => livro.editora)
+    .filter((editora, index, self) =>
+      editora && self.findIndex(e => e.id === editora.id) === index
+    );
+
+  return editoras;
+}
+
+ 
 }
 
 export { AutorService };
