@@ -1,7 +1,8 @@
 import { Feedback } from "../models/Feedback.js";
 import sequelize from "../config/database-connection.js";
 import Reserva from "../models/Reserva.js";
-import { Op } from "sequelize";
+import { Op, fn, col, literal } from "sequelize";
+
 class FeedbackService {
   static async findAll() {
     const feedbacks = await Feedback.findAll({ include: { all: true, nested: true } });
@@ -150,6 +151,47 @@ class FeedbackService {
     return { inicioMes, fimMes };
   }
 
+
+  static async relatorioFeedbackPeriodo(req, res) {
+    try {
+      const { dtInicio, dtTermino } = req.body;
+
+      if (!dtInicio || !dtTermino) {
+        throw new Error('As datas de início e fim devem ser informadas!');
+      }
+    
+      const inicio = new Date(dtInicio);
+      const fim = new Date(dtTermino);
+
+      if (inicio > fim) {
+        throw new Error('A data de início não pode ser maior que a data de fim!');
+      }
+
+      const resultado = await Feedback.findAll({
+        attributes: [
+          [fn('strftime', '%Y-%m', col('created_at')), 'mes'],
+          [fn('COUNT', '*'), 'quantidade']
+        ],
+        where: {
+          created_at: {
+            [Op.gte]: inicio,
+            [Op.lte]: fim
+          }
+        },
+        group: [fn('strftime', '%Y-%m', col('created_at'))],
+        order: [[fn('strftime', '%Y-%m', col('created_at')), 'ASC']]
+      });
+
+      return resultado.map(item => ({
+        mes: item.getDataValue('mes'),
+        quantidade: item.getDataValue('quantidade')
+      }));
+    }
+
+    catch (error) {
+      throw new Error(`Erro ao gerar relatório: ${error.message}`);
+    }
+  }
 }
 
 export { FeedbackService }
