@@ -297,13 +297,13 @@ function databaseInserts() {
     //inserindo 4 salas - SOFIA
     const sala1 = await Sala.create({
       qtCapacidade: 10,
-      dsApelido: 'Sala de Leitura 1',
+      dsApelido: 'Sala A',
       refrigerado: true
     });
 
     const sala2 = await Sala.create({
       qtCapacidade: 15,
-      dsApelido: 'Sala de Leitura 2',
+      dsApelido: 'Sala B',
       refrigerado: false
     });
 
@@ -317,6 +317,30 @@ function databaseInserts() {
       qtCapacidade: 40,
       dsApelido: 'Sala D',
       refrigerado: false
+    });
+
+    const sala5 = await Sala.create({
+      qtCapacidade: 7,
+      dsApelido: 'Sala E',
+      refrigerado: true
+    });
+
+    const sala6 = await Sala.create({
+      qtCapacidade: 22,
+      dsApelido: 'Sala F',
+      refrigerado: true
+    });
+
+    const sala7 = await Sala.create({
+      qtCapacidade: 13,
+      dsApelido: 'Sala G',
+      refrigerado: false
+    });
+
+    const sala8 = await Sala.create({
+      qtCapacidade: 9,
+      dsApelido: 'Sala H',
+      refrigerado: true
     });
 
     //inserindo reservas - SOFIA

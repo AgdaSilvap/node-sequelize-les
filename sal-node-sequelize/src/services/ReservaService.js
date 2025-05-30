@@ -240,6 +240,21 @@ class ReservaService {
       include: { all: true, nested: true },
     });
   }
+
+  // Listar a capacidade total de salas que são refrigeradas (lista as salas que são refrigeradas e a capacidade delas (1 - refrigerada e 0 - não refrigerada))
+static async listarCapacidadeSalasRefrigeradas() {
+  const salas = await Sala.findAll({
+    where: { refrigerado: true },
+    attributes: ['id', 'ds_apelido', 'qt_capacidade', 'refrigerado'],
+  });
+  return salas;
+}
+
+  // Listar total de reservas por data (filtrando pela data, mostra as salas cadastradas e quantas reservas essas salas tiveram na data selecionada)
+static async listarReservasPorData(data) {
+  
+}
+
 }
 
 export { ReservaService };

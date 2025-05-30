@@ -55,6 +55,19 @@ class ReservaController {
       next(error);
     }
   }
+
+static async listarCapacidadeSalasRefrigeradas(req, res, next) {
+  try {
+    const salas = await ReservaService.listarCapacidadeSalasRefrigeradas();
+    res.json(salas);
+  } catch (error) {
+    next(error);
+  }
+}
+
+static async listarReservasPorData(req, res, next) {
+
+}
 }
 
 export { ReservaController };
