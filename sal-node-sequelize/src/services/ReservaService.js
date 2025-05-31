@@ -156,7 +156,7 @@ class ReservaService {
       throw new Error("A data/hora de início deve ser anterior à data/hora de término.");
     }
 
-    // Regra 1: Verificar conflito de horários da sala
+    // Regra 1: Para realizar a reserva de leitura, a sala deve estar disponível.
     const conflitoWhere = {
       salaId,
       [Op.or]: [
@@ -178,7 +178,7 @@ class ReservaService {
       throw new Error("A sala já está reservada neste horário!");
     }
 
-    // Regra 2: Cliente pode ter no máximo 2 reservas no mesmo dia (baseado em dtInicio)
+    // Regra 2: Um cliente pode ter no máximo 2 reservas para um mesmo dia. 
     const inicioDia = new Date(inicio);
     inicioDia.setHours(0, 0, 0, 0);
     const fimDia = new Date(inicio);
