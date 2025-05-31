@@ -50,8 +50,7 @@ routes.post('/reservas', ReservaController.create);
 routes.put('/reservas/:id', ReservaController.update);
 routes.delete('/reservas/:id', ReservaController.delete);
 routes.get('/clientes/:clienteId/reservas', ReservaController.listarReservasPorCliente);
-routes.get('/salas/refrigeradas/capacidade', ReservaController.listarCapacidadeSalasRefrigeradas);
-
+routes.get('/salas/disponiveis', ReservaController.listarSalasDisponiveis);
 
 routes.get('/salas', SalaController.findAll);
 routes.get('/salas/:id', SalaController.findByPk);

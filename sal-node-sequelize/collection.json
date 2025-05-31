@@ -3,8 +3,8 @@
 		"_postman_id": "83f1386d-e657-4067-9316-a93a484a60d3",
 		"name": "backend-les",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "44441520",
-		"_collection_link": "https://sofia-8953900.postman.co/workspace/Sofia-'s-Workspace~2205dfc8-c3b7-4e1f-8cef-4f9193cf095d/collection/44023233-83f1386d-e657-4067-9316-a93a484a60d3?action=share&source=collection_link&creator=44441520"
+		"_exporter_id": "44023233",
+		"_collection_link": "https://sofia-8953900.postman.co/workspace/Sofia-'s-Workspace~2205dfc8-c3b7-4e1f-8cef-4f9193cf095d/collection/44023233-83f1386d-e657-4067-9316-a93a484a60d3?action=share&source=collection_link&creator=44023233"
 	},
 	"item": [
 		{
@@ -488,6 +488,57 @@
 							"path": [
 								"reservas",
 								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Capacidade de Salas Refrigeradas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/salas/refrigeradas/capacidade",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"salas",
+								"refrigeradas",
+								"capacidade"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Salas Disponíveis por Período",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/salas/disponiveis?dtInicio=2025-06-01T12:00:00Z&dtTermino=2025-06-01T13:00:00Z",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"salas",
+								"disponiveis"
+							],
+							"query": [
+								{
+									"key": "dtInicio",
+									"value": "2025-06-01T12:00:00Z"
+								},
+								{
+									"key": "dtTermino",
+									"value": "2025-06-01T13:00:00Z"
+								}
 							]
 						}
 					},
@@ -1428,6 +1479,70 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Relatório Cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/alugueis/relatorios/cliente/6?dtInicio=2025-05-01&dtFim=2025-05-30",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"alugueis",
+								"relatorios",
+								"cliente",
+								"6"
+							],
+							"query": [
+								{
+									"key": "dtInicio",
+									"value": "2025-05-01"
+								},
+								{
+									"key": "dtFim",
+									"value": "2025-05-30"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Relatório Autor",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/alugueis/relatorios/autor/3?dtInicio=2025-05-01&dtFim=2025-05-30",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"alugueis",
+								"relatorios",
+								"autor",
+								"3"
+							],
+							"query": [
+								{
+									"key": "dtInicio",
+									"value": "2025-05-01"
+								},
+								{
+									"key": "dtFim",
+									"value": "2025-05-30"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1980,6 +2095,45 @@
 								"reservas"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Relatorio Feedback",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dtInicio\": \"2025-05-01T13:00:00.000Z\",\r\n    \"dtTermino\": \"2025-05-30T14:00:00.000Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/relatorio-feedback-periodo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"relatorio-feedback-periodo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lista Editora Por Autor",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}

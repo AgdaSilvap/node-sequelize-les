@@ -64,10 +64,21 @@ static async listarCapacidadeSalasRefrigeradas(req, res, next) {
     next(error);
   }
 }
+  static async listarSalasDisponiveis(req, res, next) {
+    try {
+      const { dtInicio, dtTermino } = req.query; // Recebe as datas da query string
 
-static async listarReservasPorData(req, res, next) {
+      if (!dtInicio || !dtTermino) {
+        return res.status(400).json({ erro: "As datas de início e término são obrigatórias." });
+      }
 
-}
+      const salasDisponiveis = await ReservaService.listarSalasDisponiveisPorPeriodo(dtInicio, dtTermino);
+      res.json(salasDisponiveis);
+    } catch (error) {
+      res.status(400).json({ erro: error.toString() }); // Erros de validação ou outros
+    }
+  }
+
 }
 
 export { ReservaController };
