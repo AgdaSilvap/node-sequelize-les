@@ -49,31 +49,31 @@ class AutorService {
   }
 
   static async listaEditorasPorAutor(req) {
-  const { id } = req.params;
+    const { id } = req.params;
 
-  const autor = await Autor.findByPk(id, {
-    include: [{
-      association: 'livros',
+    const autor = await Autor.findByPk(id, {
       include: [{
-        association: 'editora'
+        association: 'livros',
+        include: [{
+          association: 'editora'
+        }]
       }]
-    }]
-  });
+    });
 
-  if (!autor) throw 'Autor não encontrado!';
+    if (!autor) throw 'Autor não encontrado!';
 
-  const livros = autor.livros || [];
+    const livros = autor.livros || [];
 
-  const editoras = livros
-    .map(livro => livro.editora)
-    .filter((editora, index, self) =>
-      editora && self.findIndex(e => e.id === editora.id) === index
-    );
+    const editoras = livros
+      .map(livro => livro.editora)
+      .filter((editora, index, self) =>
+        editora && self.findIndex(e => e.id === editora.id) === index
+      );
 
-  return editoras;
-}
+    return editoras;
+  }
 
- 
+
 }
 
 export { AutorService };
