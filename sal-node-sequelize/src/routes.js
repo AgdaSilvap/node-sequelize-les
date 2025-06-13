@@ -32,6 +32,11 @@ routes.post('/alugueis', AluguelDeLivroController.create);
 routes.put('/alugueis/:id', AluguelDeLivroController.update);
 routes.delete('/alugueis/:id', AluguelDeLivroController.delete);
 
+//Exemplo de uso: GET /alugueis/relatorios/cliente/123?dtInicio=2024-01-01&dtFim=2024-12-31
+routes.get('/alugueis/relatorios/cliente/:clienteId', AluguelDeLivroController.getLivrosAlugadosPorClienteNoPeriodo);
+// Exemplo de uso: GET /alugueis/relatorios/autor/456?dtInicio=2024-01-01&dtFim=2024-12-31
+routes.get('/alugueis/relatorios/autor/:autorId', AluguelDeLivroController.getLivrosAlugadosPorAutorNoPeriodo);
+
 //SOFIA
 routes.get('/livros', LivroController.findAll);
 routes.get('/livros/:id', LivroController.findByPk);
@@ -45,7 +50,8 @@ routes.post('/reservas', ReservaController.create);
 routes.put('/reservas/:id', ReservaController.update);
 routes.delete('/reservas/:id', ReservaController.delete);
 routes.get('/clientes/:clienteId/reservas', ReservaController.listarReservasPorCliente);
-
+routes.get('/salas/refrigeradas/capacidade', ReservaController.listarCapacidadeSalasRefrigeradas);
+routes.get('/salas/disponiveis', ReservaController.listarSalasDisponiveis);
 
 routes.get('/salas', SalaController.findAll);
 routes.get('/salas/:id', SalaController.findByPk);

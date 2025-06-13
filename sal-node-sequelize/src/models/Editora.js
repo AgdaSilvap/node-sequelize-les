@@ -14,7 +14,7 @@ class Editora extends Model {
         type: DataTypes.STRING,
         validate: {
           notEmpty: { msg: 'O CNPJ deve ser preenchido!' },
-          len: { args: [14, 18], msg: 'O CNPJ deve ter entre 14 e 18 caracteres!' },
+          len: { args: [14], msg: 'O CNPJ deve 14!' },
         }
       },
       endereco: {
@@ -29,7 +29,7 @@ class Editora extends Model {
         validate: {
           notEmpty: { msg: 'O telefone deve ser preenchido!' },
           //quantidade de caracteres contada incluindo o DDD com ou sem '0' para celular ou fixo
-          len: { args: [10, 17], msg: 'O telefone está incorreto!' },
+          len: { args: [10, 11], msg: 'O telefone está incorreto!' },
         }
       },
       email: {

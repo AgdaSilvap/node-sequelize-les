@@ -74,4 +74,4 @@ class AutorService {
   }
 }
 
-export { AutorService };
+export  { AutorService };

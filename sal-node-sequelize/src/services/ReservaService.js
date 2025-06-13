@@ -156,7 +156,7 @@ class ReservaService {
       throw new Error("A data/hora de início deve ser anterior à data/hora de término.");
     }
 
-    // Regra 1: Verificar conflito de horários da sala
+    // Regra 1: Para realizar a reserva de leitura, a sala deve estar disponível.
     const conflitoWhere = {
       salaId,
       [Op.or]: [
@@ -178,7 +178,7 @@ class ReservaService {
       throw new Error("A sala já está reservada neste horário!");
     }
 
-    // Regra 2: Cliente pode ter no máximo 2 reservas no mesmo dia (baseado em dtInicio)
+    // Regra 2: Um cliente pode ter no máximo 2 reservas para um mesmo dia. 
     const inicioDia = new Date(inicio);
     inicioDia.setHours(0, 0, 0, 0);
     const fimDia = new Date(inicio);
@@ -240,6 +240,61 @@ class ReservaService {
       include: { all: true, nested: true },
     });
   }
+
+  // Listar a capacidade total de salas que são refrigeradas (lista as salas que são refrigeradas e a capacidade delas (1 - refrigerada e 0 - não refrigerada))
+  static async listarCapacidadeSalasRefrigeradas() {
+    const salas = await Sala.findAll({
+      where: { refrigerado: true },
+      attributes: ['id', 'ds_apelido', 'qt_capacidade', 'refrigerado'],
+    });
+    return salas;
+  }
+
+  // Listagem de salas disponíveis por intervalo de tempo 
+  /**
+   * @param {Date} dtInicio 
+   * @param {Date} dtTermino 
+   * @returns {Array<Sala>} 
+   */
+  static async listarSalasDisponiveisPorPeriodo(dtInicio, dtTermino) {
+    const inicio = new Date(dtInicio);
+    const termino = new Date(dtTermino);
+
+    if (isNaN(inicio.getTime()) || isNaN(termino.getTime()) || inicio >= termino) {
+      throw new Error("Período inválido. Verifique as datas de início e término.");
+    }
+
+    const salasReservadasNoPeriodo = await Reserva.findAll({
+      attributes: ['salaId'], 
+      where: {
+        [Op.or]: [
+          { dtInicio: { [Op.between]: [inicio, termino] } },
+          { dtTermino: { [Op.between]: [inicio, termino] } },
+          {
+            [Op.and]: [
+              { dtInicio: { [Op.lte]: inicio } },
+              { dtTermino: { [Op.gte]: termino } },
+            ],
+          },
+        ],
+      },
+      group: ['salaId'], 
+    });
+
+
+    const idsSalasReservadas = salasReservadasNoPeriodo.map(reserva => reserva.salaId);
+
+    const salasDisponiveis = await Sala.findAll({
+      where: {
+        id: {
+          [Op.notIn]: idsSalasReservadas,
+        },
+      },
+    });
+
+    return salasDisponiveis;
+  }
+
 }
 
 export { ReservaService };
