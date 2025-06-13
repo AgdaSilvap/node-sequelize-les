@@ -4,13 +4,6 @@
   "description": "A simple Node.js application using Sequelize ORM with PostgreSQL and SQLite",
   "main": "index.js",
   "type": "module",
-  "dependencies": {
-    "dotenv": "^16.5.0",
-    "express": "^4.21.2",
-    "pg": "^8.16.0",
-    "sequelize": "^6.37.6",
-    "sqlite3": "^5.1.7"
-  },
   "scripts": {
     "dev": "nodemon src/server.js",
     "build": "npm install",
@@ -23,7 +16,8 @@
     "pg": "^8.16.0",
     "sequelize": "^6.37.6",
     "sqlite3": "^5.1.7",
-    "sal-node-sequelize" : "file:../sal-node-sequelize"
+    "sal-node-sequelize" : "file:../sal-node-sequelize",
+    "dotenv": "^16.5.0"
   },
   "devDependencies": {
     
