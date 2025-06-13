@@ -31,9 +31,9 @@ export const databaseConfig = {
   dialect: 'postgres',
   host: 'postgresql://postgres_prod_367m_user:HUgKP42y0VPAXrkGTY3Wm8phQEwK2V6h@dpg-d161bbfdiees73ek6jig-a.oregon-postgres.render.com/postgres_prod_367m',
   port: 5432,
-  username: postgres_prod_367m_user,
-  password: HUgKP42y0VPAXrkGTY3Wm8phQEwK2V6h,
-  database: postgres_prod_367m,
+  username: 'postgres_prod_367m_user',
+  password: 'HUgKP42y0VPAXrkGTY3Wm8phQEwK2V6h',
+  database: 'postgres_prod_367m',
   define: {
     timestamps: true,
     freezeTableName: true,
