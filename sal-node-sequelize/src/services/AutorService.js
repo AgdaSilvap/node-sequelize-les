@@ -72,8 +72,6 @@ class AutorService {
 
     return editoras;
   }
-
-
 }
 
-export { AutorService };
+export  { AutorService };
