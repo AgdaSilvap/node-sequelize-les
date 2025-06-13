@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres_dev:
+    image: postgres:16
+    container_name: postgres_dev
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: scv-backend-node-sequelize
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    networks:
+      - scv_net
+
+  postgres_prod:
+    image: postgres:16
+    container_name: postgres_prod
+    environment:
+      POSTGRES_USER: scv_backend_node_sequelize_user
+      POSTGRES_PASSWORD: jMkjyBFi4PvIsufvNUPO1LyddGTdYqE5
+      POSTGRES_DB: scv_backend_node_sequelize_lh1v
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+    networks:
+      - scv_net
+
+volumes:
+  postgres_dev_data:
+  postgres_prod_data:
+
+networks:
+  scv_net:
