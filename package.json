@@ -1,0 +1,25 @@
+{
+  "name": "sal-node-sequelize",
+  "version": "1.0.0",
+  "description": "A simple Node.js application using Sequelize ORM with PostgreSQL and SQLite",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "build": "npm install",
+    "start": "node src/server.js"
+  },
+  "author": "Agda, Bianca e Sofia",
+  "dependencies":{
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "pg": "^8.16.0",
+    "sequelize": "^6.37.6",
+    "sqlite3": "^5.1.7",
+    "sal-node-sequelize" : "file:../sal-node-sequelize",
+    "dotenv": "^16.5.0"
+  },
+  "devDependencies": {
+    
+  }
+}
