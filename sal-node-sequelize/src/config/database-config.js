@@ -12,34 +12,34 @@
 // };
 
 // Configuração do banco de dados no ambiente de desenvolvimento
-export const databaseConfig = {
-  dialect: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  username: 'postgres',
-  password: 'postgres',
-  database: 'scv-backend-node-sequelize',
-  define: {
-    timestamps: true,
-    freezeTableName: true,
-    underscored: true
-  }
-};
-
-// Configuração do banco de dados no ambiente de produção
 // export const databaseConfig = {
 //   dialect: 'postgres',
 //   host: 'localhost',
-//   port: 5433,
-//   username: process.env.POSTGRES_USERNAME_PROD,
-//   password: process.env.POSTGRES_PASSWORD_PROD,
-//   database: process.env.POSTGRES_DATABASE_PROD,
+//   port: 5432,
+//   username: 'postgres',
+//   password: 'postgres',
+//   database: 'scv-backend-node-sequelize',
 //   define: {
 //     timestamps: true,
 //     freezeTableName: true,
 //     underscored: true
-//   },
-//   dialectOptions: {
-//     ssl: false
 //   }
-// }
+// };
+
+// Configuração do banco de dados no ambiente de produção
+export const databaseConfig = {
+  dialect: 'postgres',
+  host: 'postgresql://postgres_prod_367m_user:HUgKP42y0VPAXrkGTY3Wm8phQEwK2V6h@dpg-d161bbfdiees73ek6jig-a.oregon-postgres.render.com/postgres_prod_367m',
+  port: 5432,
+  username: postgres_prod_367m_user,
+  password: HUgKP42y0VPAXrkGTY3Wm8phQEwK2V6h,
+  database: postgres_prod_367m,
+  define: {
+    timestamps: true,
+    freezeTableName: true,
+    underscored: true
+  },
+  dialectOptions: {
+    ssl: true
+  }
+}

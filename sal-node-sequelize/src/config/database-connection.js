@@ -33,7 +33,7 @@ Livro.associate(sequelize.models);
 Sala.associate(sequelize.models);
 Reserva.associate(sequelize.models);
 
-databaseInserts();
+//databaseInserts();
 
 function databaseInserts() {
   (async () => {
