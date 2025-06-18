@@ -29,7 +29,7 @@
 // Configuração do banco de dados no ambiente de produção
 export const databaseConfig = {
   dialect: 'postgres',
-  host: 'postgresql://postgres_prod_367m_user:HUgKP42y0VPAXrkGTY3Wm8phQEwK2V6h@dpg-d161bbfdiees73ek6jig-a.oregon-postgres.render.com/postgres_prod_367m',
+  host: 'dpg-d161bbfdiees73ek6jig-a.oregon-postgres.render.com', // ✅ apenas o host
   port: 5432,
   username: 'postgres_prod_367m_user',
   password: 'HUgKP42y0VPAXrkGTY3Wm8phQEwK2V6h',
@@ -40,6 +40,9 @@ export const databaseConfig = {
     underscored: true
   },
   dialectOptions: {
-    ssl: true
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
   }
 }
