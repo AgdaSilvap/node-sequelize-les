@@ -34,6 +34,10 @@ Sala.associate(sequelize.models);
 Reserva.associate(sequelize.models);
 
 //databaseInserts();
+(async () => {
+  await sequelize.sync({ alter: true }); // ou { force: true } se quiser recriar tudo
+  console.log('Tabelas sincronizadas com sucesso.');
+})();
 
 function databaseInserts() {
   (async () => {
