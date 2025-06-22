@@ -183,21 +183,10 @@ class AluguelDeLivroService {
 
     const dataInicio = new Date(dtInicio);
     const dataFim = new Date(dtFim);
-    // TO_CHAR("AluguelDeLivro"."dt_aluguel", 'DD/MM/YYYY') AS "Data de Aluguel",
-    // TO_CHAR("AluguelDeLivro"."dt_devolucao", 'DD/MM/YYYY') AS "Data de Devolução",
     const sqlQuery = `
       SELECT
-          "AluguelDeLivro".id AS "Id do Aluguel",
           STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_aluguel") AS "Data de Aluguel",
-          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_devolucao") AS "Data de Devolução",
-          "AluguelDeLivro"."ds_tipo_aluguel" AS "Tipo de Aluguel",
-          "AluguelDeLivro"."vl_total",
-          "cliente"."ds_nome" AS "Nome do Cliente",
-          "cliente"."ds_cpf" AS "CPF do Cliente",
-          "livros->aluguel_livros"."livro_id" AS "Id do Livro",
-          "livros"."ds_titulo" AS "Nome do Livro",
-          "livros"."ds_tipo" AS "Tipo do Livro",
-          "livros->autor"."nome" AS "Nome do Autor"
+          "livros"."ds_titulo" AS "Nome do Livro"
       FROM
           "aluguelDeLivros" AS "AluguelDeLivro"
       INNER JOIN
@@ -246,21 +235,10 @@ class AluguelDeLivroService {
 
     const dataInicio = new Date(dtInicio);
     const dataFim = new Date(dtFim);
-
-    // TO_CHAR("AluguelDeLivro"."dt_aluguel", 'DD/MM/YYYY') AS "Data de Aluguel",
-    // TO_CHAR("AluguelDeLivro"."dt_devolucao", 'DD/MM/YYYY') AS "Data de Devolução",
     const sqlQuery = `
       SELECT
-          "autor"."nome" AS "Nome do Autor",
-          "livros".id AS "Id do Livro",
-          "livros"."ds_titulo" AS "Nome do Livro",
-          "livros"."ds_tipo" AS "Tipo do Livro",
-          "AluguelDeLivro".id AS "Id do Aluguel",
           STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_aluguel") AS "Data de Aluguel",
-          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_devolucao") AS "Data de Devolução",
-          "cliente".id AS "Id do Cliente",
-          "cliente"."ds_nome" AS "Nome do Cliente",
-          "cliente"."ds_cpf" AS "CPF do Cliente"
+          "livros"."ds_titulo" AS "Nome do Livro"
       FROM
           "autores" AS "autor"
       INNER JOIN
