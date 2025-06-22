@@ -185,7 +185,7 @@ class AluguelDeLivroService {
     const dataFim = new Date(dtFim);
     const sqlQuery = `
       SELECT
-          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_aluguel") AS "Data de Aluguel",
+          TO_CHAR("AluguelDeLivro"."dt_aluguel", 'DD/MM/YYYY') AS "Data de Aluguel",
           "livros"."ds_titulo" AS "Nome do Livro"
       FROM
           "aluguelDeLivros" AS "AluguelDeLivro"
@@ -237,7 +237,7 @@ class AluguelDeLivroService {
     const dataFim = new Date(dtFim);
     const sqlQuery = `
       SELECT
-          STRFTIME('%d/%m/%Y', "AluguelDeLivro"."dt_aluguel") AS "Data de Aluguel",
+          TO_CHAR("AluguelDeLivro"."dt_aluguel", 'DD/MM/YYYY') AS "Data de Aluguel",
           "livros"."ds_titulo" AS "Nome do Livro"
       FROM
           "autores" AS "autor"
