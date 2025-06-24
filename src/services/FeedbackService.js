@@ -190,7 +190,7 @@ class FeedbackService {
       });
       console.log('Resultado do relatório:', resultado);
 
-      return res.json(resultado);
+      return resultado;
     } catch (error) {
       console.error('Erro ao gerar relatório:', error);
       const mensagemErro = typeof error === 'object' && error !== null
