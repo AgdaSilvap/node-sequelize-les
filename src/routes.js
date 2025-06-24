@@ -78,6 +78,6 @@ routes.get('/feedbacks/:id', FeedbackController.findByPk);
 routes.post('/feedbacks', FeedbackController.create);
 routes.put('/feedbacks/:id', FeedbackController.update);
 routes.delete('/feedbacks/:id', FeedbackController.delete);
-routes.get('/relatorio-feedback-periodo', FeedbackController.relatorioFeedbackPeriodo);
+routes.post('/relatorio-feedback-periodo', FeedbackController.relatorioFeedbackPeriodo);
 
 export { routes };
