@@ -183,11 +183,9 @@ class FeedbackService {
         raw: true
       });
 
-      // ✅ resposta correta
       res.json(resultado);
     } catch (error) {
       console.error('Erro ao gerar relatório:', error);
-      res.status(500).json({ message: `Erro ao gerar relatório: ${error.message}` });
     }
   }
 
