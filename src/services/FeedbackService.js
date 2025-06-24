@@ -160,10 +160,7 @@ class FeedbackService {
         return res.json({ message: 'As datas de início e fim devem ser informadas!' });
       }
 
-      // Garante que a data inicial comece à meia-noite do dia
       const inicio = new Date(`${dtInicio}T00:00:00.000`);
-
-      // Garante que a data final inclua o último milissegundo do dia
       const fim = new Date(`${dtTermino}T23:59:59.999`);
 
       if (isNaN(inicio.getTime()) || isNaN(fim.getTime())) {
@@ -176,7 +173,8 @@ class FeedbackService {
 
       const resultado = await Feedback.findAll({
         attributes: [
-          [fn('strftime', '%Y-%m', col('created_at')), 'mes'],
+          // MUDANÇA AQUI: de strftime para to_char para PostgreSQL
+          [fn('to_char', col('created_at'), 'YYYY-MM'), 'mes'],
           [fn('COUNT', '*'), 'quantidade']
         ],
         where: {
@@ -185,8 +183,9 @@ class FeedbackService {
             [Op.lte]: fim
           }
         },
-        group: [fn('strftime', '%Y-%m', col('created_at'))],
-        order: [[fn('strftime', '%Y-%m', col('created_at')), 'ASC']],
+        // MUDANÇA AQUI: de strftime para to_char para PostgreSQL no GROUP BY e ORDER BY
+        group: [fn('to_char', col('created_at'), 'YYYY-MM')],
+        order: [[fn('to_char', col('created_at'), 'YYYY-MM'), 'ASC']],
         raw: true
       });
 
