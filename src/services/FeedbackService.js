@@ -193,6 +193,9 @@ class FeedbackService {
       res.json(resultado);
     } catch (error) {
       console.error('Erro ao gerar relatório:', error);
+      const mensagemErro = typeof error === 'object' && error !== null
+        ? error.message || 'Erro desconhecido.'
+        : String(error);
       res.json({ message: 'Erro interno ao gerar relatório.', error: error.message });
     }
   }
