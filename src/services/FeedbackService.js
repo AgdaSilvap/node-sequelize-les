@@ -159,7 +159,7 @@ class FeedbackService {
       if (!dtInicio || !dtTermino) {
         throw new Error('As datas de início e fim devem ser informadas!');
       }
-    
+
       const inicio = new Date(dtInicio);
       const fim = new Date(dtTermino);
 
@@ -179,19 +179,18 @@ class FeedbackService {
           }
         },
         group: [fn('strftime', '%Y-%m', col('created_at'))],
-        order: [[fn('strftime', '%Y-%m', col('created_at')), 'ASC']]
+        order: [[fn('strftime', '%Y-%m', col('created_at')), 'ASC']],
+        raw: true
       });
 
-      return resultado.map(item => ({
-        mes: item.getDataValue('mes'),
-        quantidade: item.getDataValue('quantidade')
-      }));
-    }
-
-    catch (error) {
-      throw new Error(`Erro ao gerar relatório: ${error.message}`);
+      // ✅ resposta correta
+      res.json(resultado);
+    } catch (error) {
+      console.error('Erro ao gerar relatório:', error);
+      res.status(500).json({ message: `Erro ao gerar relatório: ${error.message}` });
     }
   }
+
 }
 
 export { FeedbackService }
