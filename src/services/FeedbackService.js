@@ -157,14 +157,21 @@ class FeedbackService {
       const { dtInicio, dtTermino } = req.body;
 
       if (!dtInicio || !dtTermino) {
-        throw new Error('As datas de início e fim devem ser informadas!');
+        return res.json({ message: 'As datas de início e fim devem ser informadas!' });
       }
 
-      const inicio = new Date(dtInicio);
-      const fim = new Date(dtTermino);
+      // Garante que a data inicial comece à meia-noite do dia
+      const inicio = new Date(`${dtInicio}T00:00:00.000`);
+
+      // Garante que a data final inclua o último milissegundo do dia
+      const fim = new Date(`${dtTermino}T23:59:59.999`);
+
+      if (isNaN(inicio.getTime()) || isNaN(fim.getTime())) {
+        return res.json({ message: 'Formato de data inválido. Use AAAA-MM-DD.' });
+      }
 
       if (inicio > fim) {
-        throw new Error('A data de início não pode ser maior que a data de fim!');
+        return res.json({ message: 'A data de início não pode ser maior que a data de fim!' });
       }
 
       const resultado = await Feedback.findAll({
@@ -186,6 +193,7 @@ class FeedbackService {
       res.json(resultado);
     } catch (error) {
       console.error('Erro ao gerar relatório:', error);
+      res.json({ message: 'Erro interno ao gerar relatório.', error: error.message });
     }
   }
 
