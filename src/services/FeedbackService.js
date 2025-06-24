@@ -173,7 +173,7 @@ class FeedbackService {
 
       const resultado = await Feedback.findAll({
         attributes: [
-          // MUDANÇA AQUI: de strftime para to_char para PostgreSQL
+
           [fn('to_char', col('created_at'), 'YYYY-MM'), 'mes'],
           [fn('COUNT', '*'), 'quantidade']
         ],
@@ -183,11 +183,12 @@ class FeedbackService {
             [Op.lte]: fim
           }
         },
-        // MUDANÇA AQUI: de strftime para to_char para PostgreSQL no GROUP BY e ORDER BY
+
         group: [fn('to_char', col('created_at'), 'YYYY-MM')],
         order: [[fn('to_char', col('created_at'), 'YYYY-MM'), 'ASC']],
         raw: true
       });
+      console.log('Resultado do relatório:', resultado);
 
       res.json(resultado);
     } catch (error) {
